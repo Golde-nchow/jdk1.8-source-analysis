@@ -86,7 +86,7 @@ import sun.misc.SharedSecrets;
  * @see     HashMap
  * @since   1.2
  */
-
+@SuppressWarnings("all")
 public class HashSet<E>
     extends AbstractSet<E>
     implements Set<E>, Cloneable, java.io.Serializable
@@ -211,6 +211,9 @@ public class HashSet<E>
      * <tt>(e==null&nbsp;?&nbsp;e2==null&nbsp;:&nbsp;e.equals(e2))</tt>.
      * If this set already contains the element, the call leaves the set
      * unchanged and returns <tt>false</tt>.
+     *
+     * 因为 HashMap put方法中, 如果存在冲突, 则返回 null
+     * 所以 HashSet 就用这个来判断是否冲突, 冲突则添加失败, 否则添加成功.
      *
      * @param e element to be added to this set
      * @return <tt>true</tt> if this set did not already contain the specified

@@ -73,7 +73,8 @@ import java.util.concurrent.locks.AbstractQueuedSynchronizer;
  * </ul>
  *
  *  <pre> {@code
- * class Driver { // ...
+ * class Driver {
+ *   // ...
  *   void main() throws InterruptedException {
  *     CountDownLatch startSignal = new CountDownLatch(1);
  *     CountDownLatch doneSignal = new CountDownLatch(N);
@@ -155,6 +156,9 @@ import java.util.concurrent.locks.AbstractQueuedSynchronizer;
  */
 public class CountDownLatch {
     /**
+     * 使用的是 AQS 的 state 属性来代表需要倒数的数量.
+     * 所以说，AQS 是基于共享锁来实现的.
+     *
      * Synchronization control For CountDownLatch.
      * Uses AQS state to represent count.
      */
@@ -177,11 +181,13 @@ public class CountDownLatch {
             // Decrement count; signal when transition to zero
             for (;;) {
                 int c = getState();
-                if (c == 0)
+                if (c == 0) {
                     return false;
+                }
                 int nextc = c-1;
-                if (compareAndSetState(c, nextc))
+                if (compareAndSetState(c, nextc)) {
                     return nextc == 0;
+                }
             }
         }
     }
@@ -191,12 +197,13 @@ public class CountDownLatch {
     /**
      * Constructs a {@code CountDownLatch} initialized with the given count.
      *
-     * @param count the number of times {@link #countDown} must be invoked
-     *        before threads can pass through {@link #await}
+     * @param count 任务数量
      * @throws IllegalArgumentException if {@code count} is negative
      */
     public CountDownLatch(int count) {
-        if (count < 0) throw new IllegalArgumentException("count < 0");
+        if (count < 0) {
+            throw new IllegalArgumentException("count < 0");
+        }
         this.sync = new Sync(count);
     }
 

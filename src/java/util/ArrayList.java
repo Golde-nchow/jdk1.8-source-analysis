@@ -103,14 +103,14 @@ import sun.misc.SharedSecrets;
  * @see     Vector
  * @since   1.2
  */
-
+@SuppressWarnings("all")
 public class ArrayList<E> extends AbstractList<E>
         implements List<E>, RandomAccess, Cloneable, java.io.Serializable
 {
     private static final long serialVersionUID = 8683452581122892189L;
 
     /**
-     * Default initial capacity.
+     * 默认容量是 10
      */
     private static final int DEFAULT_CAPACITY = 10;
 
@@ -127,26 +127,19 @@ public class ArrayList<E> extends AbstractList<E>
     private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
 
     /**
-     * The array buffer into which the elements of the ArrayList are stored.
-     * The capacity of the ArrayList is the length of this array buffer. Any
-     * empty ArrayList with elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA
-     * will be expanded to DEFAULT_CAPACITY when the first element is added.
+     * which the elemethents of  ArrayList are stored.
+     *
+     * 当添加第一个元素的时候，如果存储元素的数组等于空，那么就会扩容到默认容量
      */
     transient Object[] elementData; // non-private to simplify nested class access
 
     /**
-     * The size of the ArrayList (the number of elements it contains).
-     *
-     * @serial
+     * 元素的数量
      */
     private int size;
 
     /**
-     * Constructs an empty list with the specified initial capacity.
-     *
-     * @param  initialCapacity  the initial capacity of the list
-     * @throws IllegalArgumentException if the specified initial capacity
-     *         is negative
+     * 用指定容量初始化 list
      */
     public ArrayList(int initialCapacity) {
         if (initialCapacity > 0) {
@@ -160,7 +153,7 @@ public class ArrayList<E> extends AbstractList<E>
     }
 
     /**
-     * Constructs an empty list with an initial capacity of ten.
+     * 使用空数组初始化 list
      */
     public ArrayList() {
         this.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;
@@ -225,7 +218,7 @@ public class ArrayList<E> extends AbstractList<E>
             return Math.max(DEFAULT_CAPACITY, minCapacity);
         }
         return minCapacity;
-        }
+    }
 
     private void ensureCapacityInternal(int minCapacity) {
         ensureExplicitCapacity(calculateCapacity(elementData, minCapacity));
@@ -240,10 +233,7 @@ public class ArrayList<E> extends AbstractList<E>
     }
 
     /**
-     * The maximum size of array to allocate.
-     * Some VMs reserve some header words in an array.
-     * Attempts to allocate larger arrays may result in
-     * OutOfMemoryError: Requested array size exceeds VM limit
+     * ArrayList 最大容量
      */
     private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
 
@@ -453,10 +443,7 @@ public class ArrayList<E> extends AbstractList<E>
     }
 
     /**
-     * Appends the specified element to the end of this list.
-     *
-     * @param e element to be appended to this list
-     * @return <tt>true</tt> (as specified by {@link Collection#add})
+     * 添加元素到数组末尾
      */
     public boolean add(E e) {
         ensureCapacityInternal(size + 1);  // Increments modCount!!
@@ -868,6 +855,9 @@ public class ArrayList<E> extends AbstractList<E>
         public void remove() {
             if (lastRet < 0)
                 throw new IllegalStateException();
+            // 检查 ArrayList 的被修改次数是否是预期的次数
+            // 因为初始化 Iterator 的时候，会暂存一次
+            // 除了自己 Iterator 可以修改预期值，就没有其他地方可以修改了
             checkForComodification();
 
             try {
@@ -1454,7 +1444,6 @@ public class ArrayList<E> extends AbstractList<E>
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void sort(Comparator<? super E> c) {
         final int expectedModCount = modCount;
         Arrays.sort((E[]) elementData, 0, size, c);

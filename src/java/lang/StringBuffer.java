@@ -94,6 +94,7 @@ import java.util.Arrays;
  * @see     java.lang.String
  * @since   JDK1.0
  */
+@SuppressWarnings("all")
  public final class StringBuffer
     extends AbstractStringBuilder
     implements java.io.Serializable, CharSequence
@@ -267,6 +268,8 @@ import java.util.Arrays;
     @Override
     public synchronized StringBuffer append(String str) {
         toStringCache = null;
+        // 把 str 转成字符数组后，在当前字符串的字符数组后面，添加 str 的字符数组的内容
+        // 修改的还是相同的引用
         super.append(str);
         return this;
     }

@@ -26,6 +26,9 @@
 package java.lang;
 
 /**
+ * 当一个线程处于wait, sleep 或者被占用的时候会抛出,
+ * 并且线程在执行中或者执行之前被中断.
+ *
  * Thrown when a thread is waiting, sleeping, or otherwise occupied,
  * and the thread is interrupted, either before or during the activity.
  * Occasionally a method may wish to test whether the current

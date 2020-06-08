@@ -128,41 +128,36 @@ import sun.misc.SharedSecrets;
  * @see     TreeMap
  * @since JDK1.0
  */
+@SuppressWarnings("all")
 public class Hashtable<K,V>
     extends Dictionary<K,V>
     implements Map<K,V>, Cloneable, java.io.Serializable {
 
     /**
-     * The hash table data.
+     * Entry，实现 key-value
+     * Node的内部也使用了 Entry 来实现 key-value存储，只是实现不一致
      */
     private transient Entry<?,?>[] table;
 
     /**
-     * The total number of entries in the hash table.
+     * table 中 key-value 的数量
      */
     private transient int count;
 
     /**
-     * The table is rehashed when its size exceeds this threshold.  (The
-     * value of this field is (int)(capacity * loadFactor).)
+     * 当表大小超过该阈值，就重新 rehash 该 table
      *
      * @serial
      */
     private int threshold;
 
     /**
-     * The load factor for the hashtable.
-     *
-     * @serial
+     * 加载因子
      */
     private float loadFactor;
 
     /**
-     * The number of times this Hashtable has been structurally modified
-     * Structural modifications are those that change the number of entries in
-     * the Hashtable or otherwise modify its internal structure (e.g.,
-     * rehash).  This field is used to make iterators on Collection-views of
-     * the Hashtable fail-fast.  (See ConcurrentModificationException).
+     * table 修改次数
      */
     private transient int modCount = 0;
 
@@ -173,10 +168,6 @@ public class Hashtable<K,V>
      * Constructs a new, empty hashtable with the specified initial
      * capacity and the specified load factor.
      *
-     * @param      initialCapacity   the initial capacity of the hashtable.
-     * @param      loadFactor        the load factor of the hashtable.
-     * @exception  IllegalArgumentException  if the initial capacity is less
-     *             than zero, or if the load factor is nonpositive.
      */
     public Hashtable(int initialCapacity, float loadFactor) {
         if (initialCapacity < 0)
@@ -205,8 +196,7 @@ public class Hashtable<K,V>
     }
 
     /**
-     * Constructs a new, empty hashtable with a default initial capacity (11)
-     * and load factor (0.75).
+     * 默认容量为 11，加载因子为 0.75
      */
     public Hashtable() {
         this(11, 0.75f);
@@ -216,10 +206,6 @@ public class Hashtable<K,V>
      * Constructs a new hashtable with the same mappings as the given
      * Map.  The hashtable is created with an initial capacity sufficient to
      * hold the mappings in the given Map and a default load factor (0.75).
-     *
-     * @param t the map whose mappings are to be placed in this map.
-     * @throws NullPointerException if the specified map is null.
-     * @since   1.2
      */
     public Hashtable(Map<? extends K, ? extends V> t) {
         this(Math.max(2*t.size(), 11), 0.75f);
@@ -248,11 +234,6 @@ public class Hashtable<K,V>
     /**
      * Returns an enumeration of the keys in this hashtable.
      *
-     * @return  an enumeration of the keys in this hashtable.
-     * @see     Enumeration
-     * @see     #elements()
-     * @see     #keySet()
-     * @see     Map
      */
     public synchronized Enumeration<K> keys() {
         return this.<K>getEnumeration(KEYS);
@@ -463,6 +444,9 @@ public class Hashtable<K,V>
         // Makes sure the key is not already in the hashtable.
         Entry<?,?> tab[] = table;
         int hash = key.hashCode();
+
+        // 这种 hash 算法计算出的最终位置，但是低位相同的概率比较高
+        // hash & 0x7FFFFFFF 作用是去掉负号，仅此而已
         int index = (hash & 0x7FFFFFFF) % tab.length;
         @SuppressWarnings("unchecked")
         Entry<K,V> entry = (Entry<K,V>)tab[index];

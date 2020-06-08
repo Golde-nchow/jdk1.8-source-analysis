@@ -44,6 +44,7 @@ import java.util.Arrays;
  * @author      Ulf Zibis
  * @since       1.5
  */
+@SuppressWarnings("all")
 abstract class AbstractStringBuilder implements Appendable, CharSequence {
     /**
      * The value is used for character storage.

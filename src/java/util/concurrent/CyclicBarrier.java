@@ -152,21 +152,19 @@ public class CyclicBarrier {
         boolean broken = false;
     }
 
-    /** The lock for guarding barrier entry */
+    /** 保护栅栏入口的锁，默认使用非公平锁 */
     private final ReentrantLock lock = new ReentrantLock();
-    /** Condition to wait on until tripped */
+    /** 所有相互等待的线程都会在同样的条件队列上挂起 */
     private final Condition trip = lock.newCondition();
-    /** The number of parties */
+    /** 参与线程的总数 */
     private final int parties;
-    /* The command to run when tripped */
+    /* 当所有线程到齐后，会执行该线程 */
     private final Runnable barrierCommand;
     /** The current generation */
     private Generation generation = new Generation();
 
     /**
-     * Number of parties still waiting. Counts down from parties to 0
-     * on each generation.  It is reset to parties on each new
-     * generation or when broken.
+     * 还需要到来的线程数量，每当一个线程来到的时候，count 数量 - 1.
      */
     private int count;
 
@@ -175,69 +173,100 @@ public class CyclicBarrier {
      * Called only while holding lock.
      */
     private void nextGeneration() {
-        // signal completion of last generation
+        // 唤醒这一代的所有在 Condition 等待的线程，并从条件队列转移到同步队列.
         trip.signalAll();
-        // set up next generation
+        // 重置需要到达的线程数量
         count = parties;
         generation = new Generation();
     }
 
     /**
+     * 设置当前栅栏的代的 broken 属性为 true，并唤醒所有的线程, 然后转移到同步队列.
      * Sets current barrier generation as broken and wakes up everyone.
      * Called only while holding lock.
      */
     private void breakBarrier() {
+        // 设置 broken 属性为 true
         generation.broken = true;
+        // 重置 count
         count = parties;
+        // 唤醒当前在 Condition 等待的所有线程.
         trip.signalAll();
     }
 
     /**
+     * 调用的地方只有2个，就是 await() 和 await(timeout, nanos)
+     * await() 的 参数是(false, 0)
+     * 同样地，超时 await 的参数是 (true, n)
+     *
      * Main barrier code, covering the various policies.
      */
-    private int dowait(boolean timed, long nanos)
-        throws InterruptedException, BrokenBarrierException,
-               TimeoutException {
+    private int dowait(boolean timed, long nanos) throws InterruptedException, BrokenBarrierException, TimeoutException {
+        // 先获取锁，因为执行 await 操作的必须是持有锁的线程.
         final ReentrantLock lock = this.lock;
         lock.lock();
         try {
             final Generation g = generation;
 
-            if (g.broken)
+            // 如果已经进行了 breakBarrier()，那么就抛出异常.
+            if (g.broken) {
                 throw new BrokenBarrierException();
+            }
 
+            // 如果线程被中断，那么就执行 breakBarrier() 并响应中断.
+            // 因为所有等待在 barrier 的线程都是相互等待的，如果该线程被中断，那么其他线程就不用再等待.
             if (Thread.interrupted()) {
                 breakBarrier();
                 throw new InterruptedException();
             }
 
+            // 所需的到达线程数量 - 1
             int index = --count;
+            // 如果是最后一个线程到达栅栏
             if (index == 0) {  // tripped
                 boolean ranAction = false;
+                // 那么就执行钩子线程的run()
                 try {
                     final Runnable command = barrierCommand;
-                    if (command != null)
+                    if (command != null) {
                         command.run();
+                    }
                     ranAction = true;
+                    // 唤醒所有等待的线程，开启下一代.
+                    // 直接返回
                     nextGeneration();
                     return 0;
                 } finally {
-                    if (!ranAction)
+                    // 如果唤醒失败，那么就强行打破栅栏.
+                    if (!ranAction) {
                         breakBarrier();
+                    }
                 }
             }
 
             // loop until tripped, broken, interrupted, or timed out
+            // 如果还有部分线程没有到达. 也就是非最后一个线程到达.
+            // 进入自旋直到所有线程到齐、超时、或者中断。
+            // 使用自旋的一个好处就是，防止被意外中断或者唤醒，最终还是会处于挂起状态.
             for (;;) {
                 try {
-                    if (!timed)
+                    // 如果没有设置超时机制，那么调用 Condition#await()
+                    if (!timed) {
                         trip.await();
-                    else if (nanos > 0L)
+                    }
+                    // 如果有设置超时机制，那么调用 Condition#awaitNanos(nanos)
+                    else if (nanos > 0L) {
                         nanos = trip.awaitNanos(nanos);
+                    }
                 } catch (InterruptedException ie) {
+                    // 如果线程被中断，并且栅栏还没被打破，那么打破栅栏，唤醒其他线程.
                     if (g == generation && ! g.broken) {
                         breakBarrier();
                         throw ie;
+
+                    // 如果已经进入下一代.
+                    // 或者栅栏已经被打破.
+                    // 那么就没有必要再处理这个中断, 进入自我中断.
                     } else {
                         // We're about to finish waiting even if we had not
                         // been interrupted, so this interrupt is deemed to
@@ -246,12 +275,21 @@ public class CyclicBarrier {
                     }
                 }
 
-                if (g.broken)
+                // 只有经过 breakBarrier 的线程才能使该 broken 为true.
+                // 那么出现的情况有：
+                // 1、线程被中断.
+                // 2、在执行钩子线程的时候出现错误
+                // 3、reset 方法被调用
+                if (g.broken) {
                     throw new BrokenBarrierException();
+                }
 
-                if (g != generation)
+                // 如果线程被唤醒，新一代已经被唤醒，说明一切正常.
+                if (g != generation) {
                     return index;
+                }
 
+                // 如果是因为超时被唤醒，那么就打破栅栏.
                 if (timed && nanos <= 0L) {
                     breakBarrier();
                     throw new TimeoutException();
@@ -275,7 +313,9 @@ public class CyclicBarrier {
      * @throws IllegalArgumentException if {@code parties} is less than 1
      */
     public CyclicBarrier(int parties, Runnable barrierAction) {
-        if (parties <= 0) throw new IllegalArgumentException();
+        if (parties <= 0) {
+            throw new IllegalArgumentException();
+        }
         this.parties = parties;
         this.count = parties;
         this.barrierCommand = barrierAction;
@@ -454,6 +494,9 @@ public class CyclicBarrier {
     }
 
     /**
+     * 把栅栏重置成初始状态.
+     * 当我们执行该方法的时候，还有线程在该方法上等待，那么抛出 BrokenBarrierException
+     *
      * Resets the barrier to its initial state.  If any parties are
      * currently waiting at the barrier, they will return with a
      * {@link BrokenBarrierException}. Note that resets <em>after</em>

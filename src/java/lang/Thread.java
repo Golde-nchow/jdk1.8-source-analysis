@@ -137,8 +137,8 @@ import sun.security.util.SecurityConstants;
  * @see     #stop()
  * @since   JDK1.0
  */
-public
-class Thread implements Runnable {
+@SuppressWarnings("all")
+public class Thread implements Runnable {
     /* Make sure registerNatives is the first thing <clinit> does. */
     private static native void registerNatives();
     static {
@@ -927,6 +927,8 @@ class Thread implements Runnable {
     }
 
     /**
+     * 调用该方法，会让当前线程的中断位被清除。
+     *
      * Tests whether the current thread has been interrupted.  The
      * <i>interrupted status</i> of the thread is cleared by this method.  In
      * other words, if this method were to be called twice in succession, the

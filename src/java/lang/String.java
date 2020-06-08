@@ -107,7 +107,7 @@ import java.util.regex.PatternSyntaxException;
  * @see     java.nio.charset.Charset
  * @since   JDK1.0
  */
-
+@SuppressWarnings("all")
 public final class String
     implements java.io.Serializable, Comparable<String>, CharSequence {
     /** The value is used for character storage. */
@@ -823,6 +823,7 @@ public final class String
         if (srcBegin > srcEnd) {
             throw new StringIndexOutOfBoundsException(srcEnd - srcBegin);
         }
+        // 把 value[srcBegin] 到 value[srcEnd-srcBegin] 范围的数据复制到 dst[dstBegin]开始
         System.arraycopy(value, srcBegin, dst, dstBegin, srcEnd - srcBegin);
     }
 

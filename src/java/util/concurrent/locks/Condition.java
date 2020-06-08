@@ -38,82 +38,75 @@ import java.util.concurrent.TimeUnit;
 import java.util.Date;
 
 /**
- * {@code Condition} factors out the {@code Object} monitor
- * methods ({@link Object#wait() wait}, {@link Object#notify notify}
- * and {@link Object#notifyAll notifyAll}) into distinct objects to
- * give the effect of having multiple wait-sets per object, by
- * combining them with the use of arbitrary {@link Lock} implementations.
- * Where a {@code Lock} replaces the use of {@code synchronized} methods
- * and statements, a {@code Condition} replaces the use of the Object
- * monitor methods.
+ * 众所周知, Object 的 wait, notify 等方法只能在 synchronized 代码块里面使用,
+ * 并且锁住哪个对象, 就只能调用哪个对象的 wait, notify.
  *
- * <p>Conditions (also known as <em>condition queues</em> or
- * <em>condition variables</em>) provide a means for one thread to
- * suspend execution (to &quot;wait&quot;) until notified by another
- * thread that some state condition may now be true.  Because access
- * to this shared state information occurs in different threads, it
- * must be protected, so a lock of some form is associated with the
- * condition. The key property that waiting for a condition provides
- * is that it <em>atomically</em> releases the associated lock and
- * suspends the current thread, just like {@code Object.wait}.
+ * Condition 通过把监视器方法和 Lock 实现类结合起来, 将 Object 监视器方法: wait(), notify(), notifyAll()
+ * 各自放到不同的 Condition 对象当中, 从而使每个对象都拥有多个等待集的效果.
+ * 也就是一个 Condition 负责一个 wait 或者 notify 或者 notifyAll.
  *
- * <p>A {@code Condition} instance is intrinsically bound to a lock.
- * To obtain a {@code Condition} instance for a particular {@link Lock}
- * instance use its {@link Lock#newCondition newCondition()} method.
+ * Conditions(称为条件队列 或者 可变条件), 为一个线程提供了暂停执行 (wait) 的方式,
+ * 直到被另一个线程通知一些条件状态可能现在为 true.
+ * 因为对这个共享状态信息的访问发生在不同的线程中, 必须对其进行保护.
+ * 因此某种形式的锁与该 Condition 相关联。
+ * Condition 的 key 属性是自动释放相关联的 lock 锁并挂起当前线程, 就像 Object#wait().
  *
- * <p>As an example, suppose we have a bounded buffer which supports
- * {@code put} and {@code take} methods.  If a
- * {@code take} is attempted on an empty buffer, then the thread will block
- * until an item becomes available; if a {@code put} is attempted on a
- * full buffer, then the thread will block until a space becomes available.
- * We would like to keep waiting {@code put} threads and {@code take}
- * threads in separate wait-sets so that we can use the optimization of
- * only notifying a single thread at a time when items or spaces become
- * available in the buffer. This can be achieved using two
- * {@link Condition} instances.
- * <pre>
+ * 一个 Condition 实例本质上是和一个 Lock 绑定起来的。
+ * 如果要为特定的 Lock 实例获取一个 Condition 实例, 请使用 Lock#newCondition().
+ *
+ * 比如, 假设我们有一个支持 put 和 take 方法的有界缓冲区.
+ * 如果 take 方法尝试在空缓存进行操作, 那么线程会阻塞直到有东西可用;
+ * 如果 put 方法尝试在满缓存进行操作, 那么线程会阻塞直到有空间可用.
+ *
+ * 我们希望保持等待状态, 把 put线程和 get线程 的操作放入单独的等待集合中,
+ * 目的是我们可以在资源或者空间可用的某个时刻, 仅通知一个单独的线程。
+ * 这个操作可以使用两个 Condition 实例来完成.
+ *
  * class BoundedBuffer {
- *   <b>final Lock lock = new ReentrantLock();</b>
- *   final Condition notFull  = <b>lock.newCondition(); </b>
- *   final Condition notEmpty = <b>lock.newCondition(); </b>
+ *   final Lock lock = new ReentrantLock();
+ *   final Condition notFull  = lock.newCondition();
+ *   final Condition notEmpty = lock.newCondition();
  *
  *   final Object[] items = new Object[100];
  *   int putptr, takeptr, count;
  *
  *   public void put(Object x) throws InterruptedException {
- *     <b>lock.lock();
- *     try {</b>
- *       while (count == items.length)
- *         <b>notFull.await();</b>
+ *     lock.lock();
+ *     try {
+ *       while (count == items.length) {
+ *           notFull.await();
+ *       }
  *       items[putptr] = x;
- *       if (++putptr == items.length) putptr = 0;
+ *       if (++putptr == items.length) {
+ *          putptr = 0;
+ *       }
  *       ++count;
- *       <b>notEmpty.signal();</b>
- *     <b>} finally {
+ *       notEmpty.signal();
+ *     } finally {
  *       lock.unlock();
- *     }</b>
+ *     }
  *   }
  *
  *   public Object take() throws InterruptedException {
- *     <b>lock.lock();
- *     try {</b>
- *       while (count == 0)
- *         <b>notEmpty.await();</b>
+ *     lock.lock();
+ *     try {
+ *       while (count == 0) {
+ *         notEmpty.await();
+ *       }
  *       Object x = items[takeptr];
- *       if (++takeptr == items.length) takeptr = 0;
+ *       if (++takeptr == items.length) {
+ *          takeptr = 0;
+ *       }
  *       --count;
- *       <b>notFull.signal();</b>
+ *       notFull.signal();
  *       return x;
- *     <b>} finally {
+ *     } finally {
  *       lock.unlock();
- *     }</b>
+ *     }
  *   }
  * }
- * </pre>
  *
- * (The {@link java.util.concurrent.ArrayBlockingQueue} class provides
- * this functionality, so there is no reason to implement this
- * sample usage class.)
+ * (ArrayBlockingQueue 类提供此功能，因此没有理由自己去实现它。)
  *
  * <p>A {@code Condition} implementation can provide behavior and semantics
  * that is

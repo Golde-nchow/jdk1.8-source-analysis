@@ -38,7 +38,7 @@ public class Object {
 
     private static native void registerNatives(); //
     static {
-        registerNatives(); // 静态代码块，类加载时，就调用注册本地方法
+        registerNatives();
     }
 
     /**

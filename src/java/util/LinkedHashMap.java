@@ -160,6 +160,7 @@ import java.io.IOException;
  * @see     Hashtable
  * @since   1.4
  */
+@SuppressWarnings("all")
 public class LinkedHashMap<K,V>
     extends HashMap<K,V>
     implements Map<K,V>
@@ -199,24 +200,20 @@ public class LinkedHashMap<K,V>
     private static final long serialVersionUID = 3801124242820219131L;
 
     /**
-     * The head (eldest) of the doubly linked list.
+     * 双向链表的头
      */
     transient LinkedHashMap.Entry<K,V> head;
 
     /**
-     * The tail (youngest) of the doubly linked list.
+     * 双向链表的尾
      */
     transient LinkedHashMap.Entry<K,V> tail;
 
     /**
-     * The iteration ordering method for this linked hash map: <tt>true</tt>
-     * for access-order, <tt>false</tt> for insertion-order.
-     *
-     * @serial
+     * 如果为 True, 访问是顺序的，
+     * 如果为 False, 插入是顺序的
      */
     final boolean accessOrder;
-
-    // internal utilities
 
     // link at the end of list
     private void linkNodeLast(LinkedHashMap.Entry<K,V> p) {
@@ -335,13 +332,8 @@ public class LinkedHashMap<K,V>
     }
 
     /**
-     * Constructs an empty insertion-ordered <tt>LinkedHashMap</tt> instance
-     * with the specified initial capacity and load factor.
-     *
-     * @param  initialCapacity the initial capacity
-     * @param  loadFactor      the load factor
-     * @throws IllegalArgumentException if the initial capacity is negative
-     *         or the load factor is nonpositive
+     * 使用 HashMap 的构造方法初始化 LinkedHashMap
+     * 默认是插入排序，而不是访问排序
      */
     public LinkedHashMap(int initialCapacity, float loadFactor) {
         super(initialCapacity, loadFactor);
@@ -351,9 +343,6 @@ public class LinkedHashMap<K,V>
     /**
      * Constructs an empty insertion-ordered <tt>LinkedHashMap</tt> instance
      * with the specified initial capacity and a default load factor (0.75).
-     *
-     * @param  initialCapacity the initial capacity
-     * @throws IllegalArgumentException if the initial capacity is negative
      */
     public LinkedHashMap(int initialCapacity) {
         super(initialCapacity);
@@ -361,8 +350,7 @@ public class LinkedHashMap<K,V>
     }
 
     /**
-     * Constructs an empty insertion-ordered <tt>LinkedHashMap</tt> instance
-     * with the default initial capacity (16) and load factor (0.75).
+     * 使用 HashMap 的默认容量和默认加载因子
      */
     public LinkedHashMap() {
         super();
