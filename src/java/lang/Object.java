@@ -150,6 +150,14 @@ public class Object {
     }
 
     /**
+     * 返回一个对象的克隆。“克隆”的精确含义可能取决于对象的类；
+     * 通常的意图（作用）是，对于任何的对象 X，
+     * 表达式：x.clone() != x；将会返回 true;
+     * 表达式 x.clone().getClass() == x.getClass() 将会返回 true
+     * 但这些都不是硬性要求。
+     *
+     * 虽然通常情况，x.clone().equals(x) 将会返回 true，但这些都不是硬性要求。
+     *
      * Creates and returns a copy of this object.  The precise meaning
      * of "copy" may depend on the class of the object. The general
      * intent is that, for any object {@code x}, the expression:
@@ -166,12 +174,23 @@ public class Object {
      * <pre>
      * x.clone().equals(x)</pre></blockquote>
      * will be {@code true}, this is not an absolute requirement.
+     *
+     * 按照惯例，clone() 返回的对象应该包含对父类 clone() 方法的调用。
+     * 如果一个类和它的所有父类（除了 Object）都遵守这个惯例，它将会是这种情况：x.clone().getClass() == x.getClass()。
+     *
      * <p>
      * By convention, the returned object should be obtained by calling
      * {@code super.clone}.  If a class and all of its superclasses (except
      * {@code Object}) obey this convention, it will be the case that
      * {@code x.clone().getClass() == x.getClass()}.
      * <p>
+     *
+     * 按照惯例，clone() 返回的对象应该和这个被克隆的对象独立。
+     * 为了实现这个独立性，可能需要在 clone() 返回对象之前，修改一个或多个属性。
+     * 通常地，这意味着该 clone() 方法，包含克隆对象内部 “深度结构” 的任何可变对象，并用这些副本的引用替换这些对象的引用。
+     *
+     * 如果一个对象仅包含基本属性、可变对象的引用，这通常会出现：父类的 clone() 没有返回属性供修改的情况。
+     *
      * By convention, the object returned by this method should be independent
      * of this object (which is being cloned).  To achieve this independence,
      * it may be necessary to modify one or more fields of the object returned
@@ -182,6 +201,14 @@ public class Object {
      * primitive fields or references to immutable objects, then it is usually
      * the case that no fields in the object returned by {@code super.clone}
      * need to be modified.
+     *
+     * Object#clone() 执行特定的克隆机制。
+     * 首先，如果该类的没有实现接口，将会抛出 CloneNotSupportedException 异常。
+     * 注意：所有数组将会被实现 Cloneable 接口，并且返回的数组类型 T[] 是一个泛型。
+     *
+     * 因此，clone() 创建一个该对象的新的实例，并使用明确的内容初始化对应的字段，字段的内容本身并不克隆。
+     * 因此，clone() 对被克隆的对象执行 “浅克隆”，而不是 “深克隆”机制。
+     *
      * <p>
      * The method {@code clone} for class {@code Object} performs a
      * specific cloning operation. First, if the class of this object does
@@ -196,6 +223,9 @@ public class Object {
      * contents of the fields are not themselves cloned. Thus, this method
      * performs a "shallow copy" of this object, not a "deep copy" operation.
      * <p>
+     *
+     * Object 对象本身并不实现 Cloneable 接口，所以在 Object 对象上调用 clone 方法时将导致在运行时引发异常
+     *
      * The class {@code Object} does not itself implement the interface
      * {@code Cloneable}, so calling the {@code clone} method on an object
      * whose class is {@code Object} will result in throwing an
