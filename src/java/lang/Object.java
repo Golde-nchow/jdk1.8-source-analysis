@@ -100,6 +100,14 @@ public class Object {
     public native int hashCode();
 
     /**
+     * 表示其他对象是否 “等于” 这个对象。
+     * 该方法实现了对非空对象引用的等价关系：
+     * 1、自反性：对于任意非空引用 x，     x.equals(x) == true.
+     * 2、对称性：对于任意非空引用 x, y，  若 x.equals(y) == true，则 y.equals(x) == true.
+     * 3、传播性：对于任意非空引用 x, y，  若 x.equals(y) == true, y.equals(z) == true，则 x.equals(z) == true.
+     * 4、一贯性：对于任意非空引用 x, y，  多次调用 x.equals(y) 都应一致地返回 true 或 false；如果没有修改比较的信息.
+     * 5、对于任意非空引用 x,             x.equals(null) == false
+     *
      * Indicates whether some other object is "equal to" this one.
      * <p>
      * The {@code equals} method implements an equivalence relation
@@ -121,11 +129,14 @@ public class Object {
      *     {@code x} and {@code y}, multiple invocations of
      *     {@code x.equals(y)} consistently return {@code true}
      *     or consistently return {@code false}, provided no
-     *     information used in {@code equals} comparisons on the
-     *     objects is modified.
+     *     information used in {@code equals} objects is modified.
      * <li>For any non-null reference value {@code x},
      *     {@code x.equals(null)} should return {@code false}.
      * </ul>
+     *
+     * 其他对象应在 Object#equals 上实现最具区分度的等价关系.
+     * 也就是说，对于任意非空的引用 x, y, 若 x == y 返回 true, equals 方法返回
+     *
      * <p>
      * The {@code equals} method for class {@code Object} implements
      * the most discriminating possible equivalence relation on objects;
@@ -231,12 +242,9 @@ public class Object {
      * whose class is {@code Object} will result in throwing an
      * exception at run time.
      *
-     * @return     a clone of this instance.
-     * @throws  CloneNotSupportedException  if the object's class does not
-     *               support the {@code Cloneable} interface. Subclasses
-     *               that override the {@code clone} method can also
-     *               throw this exception to indicate that an instance cannot
-     *               be cloned.
+     * @return     该实例的克隆.
+     * @throws  CloneNotSupportedException  若该对象没有实现 {@code Cloneable} 接口.
+     *               子类重写该 {@code clone} 方法时，若认为该对象不可被克隆，那么也可以抛出该异常.
      * @see java.lang.Cloneable
      */
     protected native Object clone() throws CloneNotSupportedException;
