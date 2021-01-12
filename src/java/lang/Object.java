@@ -283,11 +283,20 @@ public class Object {
     }
 
     /**
+     * 通知一个在该对象的监视器中，等待的单线程。如果有任意数量的线程在等待这个对象，
+     * 只有一个会被唤醒。选择是任意的，并且根据实施自行决定发生。当一个线程调用了该
+     * 对象的 wait 方法后，其实就是在等待该对象的监视器。
+     *
      * Wakes up a single thread that is waiting on this object's
      * monitor. If any threads are waiting on this object, one of them
      * is chosen to be awakened. The choice is arbitrary and occurs at
      * the discretion of the implementation. A thread waits on an object's
      * monitor by calling one of the {@code wait} methods.
+     *
+     * 被唤醒的线程无法继续运行，直到当前线程放弃了在该对象的锁。被唤醒的线程将会以
+     * 正常的方式，与那些可能在该对象主动竞争的线程进行竞争。例如，被唤醒的线程没有
+     * 在下一次竞争锁的时候，享有线程优先级或者劣势。
+     *
      * <p>
      * The awakened thread will not be able to proceed until the current
      * thread relinquishes the lock on this object. The awakened thread will
@@ -295,6 +304,14 @@ public class Object {
      * actively competing to synchronize on this object; for example, the
      * awakened thread enjoys no reliable privilege or disadvantage in being
      * the next thread to lock this object.
+     *
+     * 该方法应只被拥有该对象监视器的线程调用。线程拥有该对象的监视器锁可通过下面其中一个途径：
+     * 1、通过执行该对象的同步实例 synchronized 方法
+     * 2、通过执行该对象的同步代码块
+     * 3、对于 Class 类型的对象，通过执行该对象的静态方法
+     *
+     * 同一时间，只有一个线程可获得对象的监视器锁。
+     *
      * <p>
      * This method should only be called by a thread that is the owner
      * of this object's monitor. A thread becomes the owner of the
@@ -309,8 +326,7 @@ public class Object {
      * <p>
      * Only one thread at a time can own an object's monitor.
      *
-     * @throws  IllegalMonitorStateException  if the current thread is not
-     *               the owner of this object's monitor.
+     * @throws  IllegalMonitorStateException 若当前线程非监视器锁的持有者，则抛出.
      * @see        java.lang.Object#notifyAll()
      * @see        java.lang.Object#wait()
      */
