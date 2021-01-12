@@ -333,9 +333,16 @@ public class Object {
     public final native void notify();
 
     /**
+     * 通知所有在该对象的监视器锁上等待的线程。线程通过 wait 方法，在该对象的监视器锁上等待。
+     *
      * Wakes up all threads that are waiting on this object's monitor. A
      * thread waits on an object's monitor by calling one of the
      * {@code wait} methods.
+     *
+     * 被唤醒的线程无法继续运行，直到当前线程放弃了在该对象的锁。被唤醒的线程将会以
+     * 正常的方式，与那些可能在该对象主动竞争的线程进行竞争。例如，被唤醒的线程没有
+     * 在下一次竞争锁的时候，享有线程优先级或者劣势。
+     *
      * <p>
      * The awakened threads will not be able to proceed until the current
      * thread relinquishes the lock on this object. The awakened threads
@@ -343,14 +350,17 @@ public class Object {
      * be actively competing to synchronize on this object; for example,
      * the awakened threads enjoy no reliable privilege or disadvantage in
      * being the next thread to lock this object.
+     *
+     * 该方法应只被拥有该对象监视器锁的线程调用。
+     * 详情见 notify 方法描述和获取监视器锁途径。
+     *
      * <p>
      * This method should only be called by a thread that is the owner
      * of this object's monitor. See the {@code notify} method for a
      * description of the ways in which a thread can become the owner of
      * a monitor.
      *
-     * @throws  IllegalMonitorStateException  if the current thread is not
-     *               the owner of this object's monitor.
+     * @throws  IllegalMonitorStateException  若调用的线程并非对象监视器锁的持有者.
      * @see        java.lang.Object#notify()
      * @see        java.lang.Object#wait()
      */
