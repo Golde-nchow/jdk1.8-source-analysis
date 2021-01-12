@@ -250,12 +250,20 @@ public class Object {
     protected native Object clone() throws CloneNotSupportedException;
 
     /**
+     * 返回一个对象的字符串表示。通常 toString 方法返回一个该对象的文本表示。
+     * 结果应是一个简洁，且对于人类来说，是具有代表性的。
+     * 建议：所有子类都重写此方法。
+     *
      * Returns a string representation of the object. In general, the
      * {@code toString} method returns a string that
      * "textually represents" this object. The result should
      * be a concise but informative representation that is easy for a
      * person to read.
      * It is recommended that all subclasses override this method.
+     *
+     * toString 方法对于 Object 类来说，返回的是一个由 '名称 + @ + 对象哈希码' 组成的字符串。
+     * 换一种说法，该方法返回一个和 getClass().getName() + '@' + Integer.toHexString(hashCode()) 值相同的字符串
+     *
      * <p>
      * The {@code toString} method for class {@code Object}
      * returns a string consisting of the name of the class of which the
@@ -268,7 +276,7 @@ public class Object {
      * getClass().getName() + '@' + Integer.toHexString(hashCode())
      * </pre></blockquote>
      *
-     * @return  a string representation of the object.
+     * @return  该对象的字符串表现形式.
      */
     public String toString() {
         return getClass().getName() + "@" + Integer.toHexString(hashCode());
