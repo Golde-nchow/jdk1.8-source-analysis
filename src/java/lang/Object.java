@@ -679,10 +679,23 @@ public class Object {
     }
 
     /**
+     * 当一个对象被垃圾收集器认为，在这个对象上没有被其他对象引用，那么就会在该对象上
+     * 调用此方法。子类重写了该方法，目的是处理系统资源或执行其他清理。
+     *
      * Called by the garbage collector on an object when garbage collection
      * determines that there are no more references to the object.
      * A subclass overrides the {@code finalize} method to dispose of
      * system resources or to perform other cleanup.
+     *
+     * <p>
+     * finalize 的一般约定是，虚拟机认为：任何尚未终止的线程都不再可以通过任何方式访问该对象时，
+     * 就会调用它，除非是由于某个其他对象或类的终结操作（该对象或类已准备好终结）所导致。
+     * finalize 方法可能会采取任何的行动，包括使该对象对于其他线程来说，重新变得可用。
+     * 通常 finalize 的目的是为了在该对象被不可撤销的丢弃之前，执行清理动作。
+     *
+     * 例如：表示输入/输出连接的对象的 finalize 方法可能会执行显式的 I/O事务，以便在创建该对象之前
+     * 中断连接，永久丢弃。
+     *
      * <p>
      * The general contract of {@code finalize} is that it is invoked
      * if and when the Java&trade; virtual
@@ -697,10 +710,20 @@ public class Object {
      * for an object that represents an input/output connection might perform
      * explicit I/O transactions to break the connection before the object is
      * permanently discarded.
+     *
+     * <p>
+     * 一个对象的 finalize 方法没有特殊的操作；只是单纯地返回而已；子类的可能会重写这个方法。
+     *
      * <p>
      * The {@code finalize} method of class {@code Object} performs no
      * special action; it simply returns normally. Subclasses of
      * {@code Object} may override this definition.
+     *
+     * <p>
+     * Java语言不能保证哪个线程将会为给出的对象执行 finalize 方法。但是，他保证了，
+     * 线程执行 finalize 的时候，将不会持有任何用户可见的同步锁。若 finalize 方法
+     * 引发了一个未捕获的异常，那么该异常将会被忽略，并且终止该对象的 finalize 过程。
+     *
      * <p>
      * The Java programming language does not guarantee which thread will
      * invoke the {@code finalize} method for any given object. It is
@@ -708,6 +731,12 @@ public class Object {
      * be holding any user-visible synchronization locks when finalize is
      * invoked. If an uncaught exception is thrown by the finalize method,
      * the exception is ignored and finalization of that object terminates.
+     *
+     * <p>
+     * finalize 方法被执行后，该对象不再采取任何操作，直到 JVM 再次认为任何尚未终止的
+     * 线程都不再可以通过任何方式访问该对象时，包括其他对象或类已经准备好执行 finalize，
+     * 此时对象可能被丢弃。
+     *
      * <p>
      * After the {@code finalize} method has been invoked for an object, no
      * further action is taken until the Java virtual machine has again
@@ -715,6 +744,13 @@ public class Object {
      * be accessed by any thread that has not yet died, including possible
      * actions by other objects or classes which are ready to be finalized,
      * at which point the object may be discarded.
+     *
+     * <p>
+     * JVM 对于任意给出的对象，finalize 方法只会执行一次。
+     * <p>
+     * 任何的异常在 finalize 方法抛出时，将会停止使该对象的 finalize 进程，但是该异常
+     * 会被忽略。
+     *
      * <p>
      * The {@code finalize} method is never invoked more than once by a Java
      * virtual machine for any given object.
