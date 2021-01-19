@@ -367,10 +367,28 @@ public class Object {
     public final native void notifyAll();
 
     /**
+     * 使当前线程等待，直到另一个线程对该对象执行 notify 方法、或者 notifyAll 方法、
+     * 又或者到达了指定的时间。
+     *
      * Causes the current thread to wait until either another thread invokes the
      * {@link java.lang.Object#notify()} method or the
      * {@link java.lang.Object#notifyAll()} method for this object, or a
      * specified amount of time has elapsed.
+     *
+     * <p>
+     * 当前线程必须拥有该对象的监视器锁。
+     *
+     * <p>
+     * 该方法使当前线程（称之为 线程 T）置于该对象的 wait-set 中，然后放弃这个对象的所有资源。
+     * 线程 T 被禁止线程调度，并且休眠，直到发生以下 4 种情况之一：
+     *
+     * <ul>
+     * <li> 1、其他线程执行该对象的 notify 方法，然后【线程 T】被选中并唤醒。
+     * <li> 2、其他线程执行该对象的 notifyAll 方法。
+     * <li> 3、其他线程调用 Thread#interrupt 方法，终止了线程 T 的休眠。
+     * <li> 4、达到了指定的休眠时间；但若时间为 0，则只能直到 notify 方法被调用。
+     * </ul>
+     *
      * <p>
      * The current thread must own this object's monitor.
      * <p>
@@ -391,6 +409,13 @@ public class Object {
      * {@code timeout} is zero, however, then real time is not taken into
      * consideration and the thread simply waits until notified.
      * </ul>
+     *
+     * 然后，【线程 T】被移出该对象的 wait-set，并在线程调度方面重新变为可用。然后以正常的
+     * 方式与其他线程竞争，以便同步该对象；一旦获得该对象的控制权，所有在该对象上的同步声明
+     * 将会被记录为 quo nate - 即逐一调用 wait 方法的情况。然后【线程 T】从 wait 方法
+     * 返回过来。因此，在从 wait 方法返回后，该对象和【线程 T】的同步状态完全就像调用 wait
+     * 方法时一样。
+     *
      * The thread <var>T</var> is then removed from the wait set for this
      * object and re-enabled for thread scheduling. It then competes in the
      * usual manner with other threads for the right to synchronize on the
@@ -402,6 +427,20 @@ public class Object {
      * {@code wait} method, the synchronization state of the object and of
      * thread {@code T} is exactly as it was when the {@code wait} method
      * was invoked.
+     *
+     * 线程同样可以不通过 notify、interrupt、超时，进行唤醒，这就是所谓的虚假唤醒。
+     * 虽然这个情况在时间当中很少发生，应用程序必须通过测试这个情况来防范，并当条件不满足
+     * 时让线程继续等待。换句话说，线程等待必须在循环内体内，就像这样：
+     * <pre>
+     *     synchronized (obj) {
+     *         while (&lt;condition does not hold&gt;)
+     *             obj.wait(timeout);
+     *         ... // 执行适当的行动
+     *     }
+     * </pre>
+     * (有关此主题的更多信息，见 Doug Lea的Java并发编程 3.2.3 章节
+     *  或者 Joshua Bloch 的 Effective Java 第50项)
+     *
      * <p>
      * A thread can also wake up without being notified, interrupted, or
      * timing out, a so-called <i>spurious wakeup</i>.  While this will rarely
@@ -421,6 +460,9 @@ public class Object {
      * 2000), or Item 50 in Joshua Bloch's "Effective Java Programming
      * Language Guide" (Addison-Wesley, 2001).
      *
+     * <p> 若在当前线程的等待状态，被任何线程调用 Thread#interrupt 来中断，那么将会
+     * 抛出 InterruptedException。直到该对象的锁定状态已经恢复到上述的情况。
+     *
      * <p>If the current thread is {@linkplain java.lang.Thread#interrupt()
      * interrupted} by any thread before or while it is waiting, then an
      * {@code InterruptedException} is thrown.  This exception is not
@@ -428,26 +470,30 @@ public class Object {
      * described above.
      *
      * <p>
+     * 注意 wait 方法，相当于将当前线程放在该对象的 wait-set 方法中，但是，仅解锁此对象。
+     * 在线程等待时，在这个线程的其他对象会同步保持锁定状态。
+     *
+     * <p>
      * Note that the {@code wait} method, as it places the current thread
      * into the wait set for this object, unlocks only this object; any
      * other objects on which the current thread may be synchronized remain
      * locked while the thread waits.
+     *
+     * <p>
+     * 该方法应只被拥有该对象监视器锁的线程调用。
+     * 详情见 notify 方法描述和获取监视器锁途径。
+     *
      * <p>
      * This method should only be called by a thread that is the owner
      * of this object's monitor. See the {@code notify} method for a
      * description of the ways in which a thread can become the owner of
      * a monitor.
      *
-     * @param      timeout   the maximum time to wait in milliseconds.
-     * @throws  IllegalArgumentException      if the value of timeout is
-     *               negative.
-     * @throws  IllegalMonitorStateException  if the current thread is not
-     *               the owner of the object's monitor.
-     * @throws  InterruptedException if any thread interrupted the
-     *             current thread before or while the current thread
-     *             was waiting for a notification.  The <i>interrupted
-     *             status</i> of the current thread is cleared when
-     *             this exception is thrown.
+     * @param      timeout   线程等待的最大毫秒值.
+     * @throws  IllegalArgumentException  若毫秒值为负数
+     * @throws  IllegalMonitorStateException 若当前线程没有持有该对象的监视器锁
+     * @throws  InterruptedException 若任意线程中断了正在等待唤醒的线程，那么该
+     *                               异常会被抛出，该线程中断状态将会被清除。
      * @see        java.lang.Object#notify()
      * @see        java.lang.Object#notifyAll()
      */
