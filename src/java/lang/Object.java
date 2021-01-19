@@ -616,11 +616,31 @@ public class Object {
     }
 
     /**
+     * 该方法也是直接调用了 wait(long timeout)，只不过 timeout 参数为 0.
+     *
+     * 使当前线程等待，直到另一个线程执行了这个对象的 Object#notify、 Object#notifyAll。
+     *
      * Causes the current thread to wait until another thread invokes the
      * {@link java.lang.Object#notify()} method or the
      * {@link java.lang.Object#notifyAll()} method for this object.
      * In other words, this method behaves exactly as if it simply
      * performs the call {@code wait(0)}.
+     *
+     * <p>
+     * 当前线程必须持有该方法的监视器锁。线程释放该监视器锁，并进行等待，直到
+     * 另一个线程通过 notify 方法，或者 notifyAll 方法，唤醒了在该对象的监视器上等待的线程。
+     * 然后线程将会等待，直到它可以重新持有该对象的监视器锁，然后恢复执行。
+     *
+     * <p>和 wait(long timeout) 一样，可能会发生中断和虚假唤醒的情况，所以
+     *    应将等待的代码放到循环体内，避免往下执行。
+     * <pre>
+     *     synchronized (obj) {
+     *         while (&lt;condition does not hold&gt;)
+     *             obj.wait(timeout, nanos);
+     *         ... // Perform action appropriate to condition
+     *     }
+     * </pre>
+     *
      * <p>
      * The current thread must own this object's monitor. The thread
      * releases ownership of this monitor and waits until another thread
@@ -638,18 +658,19 @@ public class Object {
      *         ... // Perform action appropriate to condition
      *     }
      * </pre>
+     *
+     * <p>
+     * 该方法应只被拥有该对象监视器锁的线程调用。
+     * 详情见 notify 方法描述和获取监视器锁途径。
+     *
      * This method should only be called by a thread that is the owner
      * of this object's monitor. See the {@code notify} method for a
      * description of the ways in which a thread can become the owner of
      * a monitor.
      *
-     * @throws  IllegalMonitorStateException  if the current thread is not
-     *               the owner of the object's monitor.
-     * @throws  InterruptedException if any thread interrupted the
-     *             current thread before or while the current thread
-     *             was waiting for a notification.  The <i>interrupted
-     *             status</i> of the current thread is cleared when
-     *             this exception is thrown.
+     * @throws  IllegalMonitorStateException  若当前线程没有持有该对象的监视器锁.
+     * @throws  InterruptedException 若任意线程中断了正在等待唤醒的线程，那么该
+     *                               异常会被抛出，该线程中断状态将会被清除.
      * @see        java.lang.Object#notify()
      * @see        java.lang.Object#notifyAll()
      */
