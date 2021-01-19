@@ -500,11 +500,21 @@ public class Object {
     public final native void wait(long timeout) throws InterruptedException;
 
     /**
+     * 其实这个方法调用的是 wait(long timeout)，而且这个纳秒值是虚假的，原理：timeout++
+     *
+     * 使当前线程处于等待，直到另一个线程执行了这个对象的 Object#notify 或者 Object#notifyAll，
+     * 或者其他线程中断了当前线程，或者超时时间过了。
+     *
      * Causes the current thread to wait until another thread invokes the
      * {@link java.lang.Object#notify()} method or the
      * {@link java.lang.Object#notifyAll()} method for this object, or
      * some other thread interrupts the current thread, or a certain
      * amount of real time has elapsed.
+     *
+     * <p>
+     * 该方法的第一个参数和 wait(long timeout) 方法类似，但是这个方法提供了对时间
+     * 更细致的控制。给出以纳秒为单位测量的超时时间：1000000*timeout+nanos
+     *
      * <p>
      * This method is similar to the {@code wait} method of one
      * argument, but it allows finer control over the amount of time to
@@ -513,10 +523,27 @@ public class Object {
      * <blockquote>
      * <pre>
      * 1000000*timeout+nanos</pre></blockquote>
+     *
+     * 在其他所有方面，该方法和 wait(long timeout) 方法做了一样的事情。特别是，
+     * wait(0,0) 和 wait(0) 都代表了同样的意义。
+     *
      * <p>
      * In all other respects, this method does the same thing as the
      * method {@link #wait(long)} of one argument. In particular,
      * {@code wait(0, 0)} means the same thing as {@code wait(0)}.
+     *
+     * <p>
+     * 当前线程必须拥有该对象的监视器锁。线程释放该监视器锁，并进行等待，直到
+     * 下面两种情况发生其中一种：
+     * <ul>
+     *     <li>
+     *         1、另一个线程通过 notify 方法，或者 notifyAll 方法，唤醒了在该对象的监视器上等待的线程
+     *     </li>
+     *     <li>
+     *         2、超时时间。通过 timeout 去定义，毫秒 + 纳秒的超时时间已过。
+     *     </li>
+     * </ul>
+     *
      * <p>
      * The current thread must own this object's monitor. The thread
      * releases ownership of this monitor and waits until either of the
@@ -529,6 +556,22 @@ public class Object {
      *     milliseconds plus {@code nanos} nanoseconds arguments, has
      *     elapsed.
      * </ul>
+     *
+     * <p>然后线程将会等待，直到它可以重新持有该对象的监视器锁，然后恢复执行。
+     * <p>和 wait(long timeout) 一样，可能会发生中断和虚假唤醒的情况，所以
+     *    应将等待的代码放到循环体内，避免往下执行。
+     * <pre>
+     *     synchronized (obj) {
+     *         while (&lt;condition does not hold&gt;)
+     *             obj.wait(timeout, nanos);
+     *         ... // Perform action appropriate to condition
+     *     }
+     * </pre>
+     *
+     * <p>
+     * 该方法应只被拥有该对象监视器锁的线程调用。
+     * 详情见 notify 方法描述和获取监视器锁途径。
+     *
      * <p>
      * The thread then waits until it can re-obtain ownership of the
      * monitor and resumes execution.
@@ -547,19 +590,13 @@ public class Object {
      * description of the ways in which a thread can become the owner of
      * a monitor.
      *
-     * @param      timeout   the maximum time to wait in milliseconds.
-     * @param      nanos      additional time, in nanoseconds range
-     *                       0-999999.
-     * @throws  IllegalArgumentException      if the value of timeout is
-     *                      negative or the value of nanos is
-     *                      not in the range 0-999999.
-     * @throws  IllegalMonitorStateException  if the current thread is not
-     *               the owner of this object's monitor.
-     * @throws  InterruptedException if any thread interrupted the
-     *             current thread before or while the current thread
-     *             was waiting for a notification.  The <i>interrupted
-     *             status</i> of the current thread is cleared when
-     *             this exception is thrown.
+     * @param      timeout   等待时间的毫秒值.
+     * @param      nanos     额外的时间，范围 0-999999.
+     * @throws  IllegalArgumentException 若 timeout 为负数，
+     *                                   或 nanos 值不在 0-999999 范围内
+     * @throws  IllegalMonitorStateException  若当前线程没有持有该对象的监视器锁.
+     * @throws  InterruptedException 若任意线程中断了正在等待唤醒的线程，那么该
+     *                               异常会被抛出，该线程中断状态将会被清除.
      */
     public final void wait(long timeout, int nanos) throws InterruptedException {
         if (timeout < 0) {
