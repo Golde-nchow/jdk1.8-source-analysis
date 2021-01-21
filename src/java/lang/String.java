@@ -270,6 +270,10 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 分配一个新的，从数组里截取指定长度字符的 String 对象。offset 参数是数组的开始索引，
+     * count 参数定义了截取的长度。截取的内容都会被转换为 char 类型；后续对 int 数组进行
+     * 修改，不会影响新创建的字符串。
+     *
      * Allocates a new {@code String} that contains characters from a subarray
      * of the <a href="Character.html#unicode">Unicode code point</a> array
      * argument.  The {@code offset} argument is the index of the first code
@@ -279,21 +283,21 @@ public final class String implements java.io.Serializable, Comparable<String>, C
      * affect the newly created string.
      *
      * @param  codePoints
-     *         Array that is the source of Unicode code points
+     *         Array that is the source of Unicode code points.
+     *         数组是Unicode代码点的来源。
      *
      * @param  offset
-     *         The initial offset
+     *         The initial offset. 初始偏移量。
      *
      * @param  count
-     *         The length
+     *         The length. 截取的长度。
      *
      * @throws  IllegalArgumentException
-     *          If any invalid Unicode code point is found in {@code
-     *          codePoints}
+     *          如果在一组 Unicode代码点中，发现任何不合法的 Unicode 代码点，则引发异常。
      *
      * @throws  IndexOutOfBoundsException
-     *          If the {@code offset} and {@code count} arguments index
-     *          characters outside the bounds of the {@code codePoints} array
+     *          如果偏移量和截取的长度在数组范围之外，则引发该异常。
+     *
      *
      * @since  1.5
      */
