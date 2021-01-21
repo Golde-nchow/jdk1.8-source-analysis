@@ -40,6 +40,8 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 /**
+ * 科普：Unicode代码点，指的是一个字符使用了 ASCII 编码对应的数字，例如: 'a'=97
+ *
  * String类表示字符的串。Java程序中的字符串文字，例如 “abc”，均是该类的实现。
  *
  * The {@code String} class represents character strings. All
@@ -273,9 +275,9 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
-     * 分配一个新的，从数组里截取指定长度字符的 String 对象。offset 参数是数组的开始索引，
-     * count 参数定义了截取的长度。截取的内容都会被转换为 char 类型；后续对 int 数组进行
-     * 修改，不会影响新创建的字符串。
+     * 分配一个新的，从 Unicode代码点数组 里截取指定长度字符的 String 对象。
+     * offset 参数是数组的开始索引，count 参数定义了截取的长度。截取的内容都会被
+     * 转换为 char 类型；后续对 int 数组进行修改，不会影响新创建的字符串。
      *
      * Allocates a new {@code String} that contains characters from a subarray
      * of the <a href="Character.html#unicode">Unicode code point</a> array
@@ -296,7 +298,7 @@ public final class String implements java.io.Serializable, Comparable<String>, C
      *         The length. 截取的长度。
      *
      * @throws  IllegalArgumentException
-     *          如果在一组 Unicode代码点中，发现任何不合法的 Unicode 代码点，则引发异常。
+     *          如果在 Unicode代码点数组中，发现任何不合法的 Unicode 代码点，则引发异常。
      *
      * @throws  IndexOutOfBoundsException
      *          如果偏移量和截取的长度在数组范围之外，则引发该异常。
