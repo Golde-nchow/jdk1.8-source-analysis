@@ -216,13 +216,16 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 分配一个新的 String 对象，目的是可以让它表示：当前包含在字符数组当中的字符序列。
+     * 字符数组的内容都是一份复制；后面对字符数组的修改都不会影响到新创建的字符串。
+     *
      * Allocates a new {@code String} so that it represents the sequence of
      * characters currently contained in the character array argument. The
      * contents of the character array are copied; subsequent modification of
      * the character array does not affect the newly created string.
      *
      * @param  value
-     *         The initial value of the string
+     *         字符串初始值
      */
     public String(char value[]) {
         this.value = Arrays.copyOf(value, value.length);
