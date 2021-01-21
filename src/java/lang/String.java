@@ -234,6 +234,12 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 原理：使用的是 Arrays.copyOfRange 工具类
+     *
+     * 分配一个新的，从字符数组截取指定长度的字符，形成的 String对象。
+     * offset 参数是数组的开始索引，count 参数定义了截取的长度。截取的内容都是复制的，
+     * 后续对 int 数组进行修改，不会影响新创建的字符串
+     *
      * Allocates a new {@code String} that contains characters from a subarray
      * of the character array argument. The {@code offset} argument is the
      * index of the first character of the subarray and the {@code count}
@@ -242,17 +248,16 @@ public final class String implements java.io.Serializable, Comparable<String>, C
      * not affect the newly created string.
      *
      * @param  value
-     *         Array that is the source of characters
+     *         字符的来源
      *
      * @param  offset
-     *         The initial offset
+     *         初始化偏移量
      *
      * @param  count
-     *         The length
+     *         截取的长度
      *
      * @throws  IndexOutOfBoundsException
-     *          If the {@code offset} and {@code count} arguments index
-     *          characters outside the bounds of the {@code value} array
+     *          如果偏移量和截取的长度在数组范围之外，则引发该异常
      */
     public String(char value[], int offset, int count) {
         if (offset < 0) {
