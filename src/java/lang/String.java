@@ -40,9 +40,33 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 /**
+ * String类表示字符的串。Java程序中的字符串文字，例如 “abc”，均是该类的实现。
+ *
  * The {@code String} class represents character strings. All
  * string literals in Java programs, such as {@code "abc"}, are
  * implemented as instances of this class.
+ *
+ * <p>
+ * 字符串都是不变的；他们的值在被创建后就不能被改变。字符串缓冲区支持可变字符串。
+ * 因为 String 对象都是不可变的，所以他们可以共享。
+ * 例如：
+ * <blockquote><pre>
+ *     String str = "abc";
+ * </pre></blockquote><p>
+ * 相当于：
+ * <blockquote><pre>
+ *     char data[] = {'a', 'b', 'c'};
+ *     String str = new String(data);
+ * </pre></blockquote><p>
+ * 以下是一些如何使用字符串的示例：
+ * <blockquote><pre>
+ *     System.out.println("abc");
+ *     String cde = "cde";
+ *     System.out.println("abc" + cde);
+ *     String c = "abc".substring(2,3);
+ *     String d = cde.substring(1, 2);
+ * </pre></blockquote>
+ *
  * <p>
  * Strings are constant; their values cannot be changed after they
  * are created. String buffers support mutable strings.
@@ -63,6 +87,12 @@ import java.util.regex.PatternSyntaxException;
  *     String c = "abc".substring(2,3);
  *     String d = cde.substring(1, 2);
  * </pre></blockquote>
+ *
+ * <p>
+ * 字符串类包含了：
+ * 检查单个字符；比较字符串；查找字符串；提取子串；创建一个字符串的副本，所有的
+ * 字符都翻译为大写或小写。案例映射基于字符类指定的 Unicode 标准版本。
+ *
  * <p>
  * The class {@code String} includes methods for examining
  * individual characters of the sequence, for comparing strings, for
@@ -70,6 +100,15 @@ import java.util.regex.PatternSyntaxException;
  * copy of a string with all characters translated to uppercase or to
  * lowercase. Case mapping is based on the Unicode Standard version
  * specified by the {@link java.lang.Character Character} class.
+ *
+ * <p>
+ * Java语言为字符串的拼接操作符 (&nbsp;+&nbsp;) 提供了一个特殊的支持，并将其他
+ * 对象转换为字符串。字符串拼接是通过 StringBuilder 或者 StringBuffer 类的
+ * append 方法实现的。字符串转换是通过 toString 方法实现的，通过 Object 和
+ * 其子类进行定义的。
+ * 关于更多的字符串拼接和转换的信息，详细见 Gosling, Joy, and Steele 的
+ * <i>Java语言规范</i> (JLS).
+ *
  * <p>
  * The Java language provides special support for the string
  * concatenation operator (&nbsp;+&nbsp;), and for conversion of
@@ -82,17 +121,29 @@ import java.util.regex.PatternSyntaxException;
  * string concatenation and conversion, see Gosling, Joy, and Steele,
  * <i>The Java Language Specification</i>.
  *
+ * <p> 除非另有说明，在这个类的构造器或者方法上，传递一个 null 的参数，将会引发空指针异常。
+ *
  * <p> Unless otherwise noted, passing a <tt>null</tt> argument to a constructor
  * or method in this class will cause a {@link NullPointerException} to be
  * thrown.
+ *
+ * <p> String 类表示 UTF-16 格式的字符串，其中补充字符由 unicode 代理对表示。
+ * (详情请查看 Character类 的<a href="Character.html#unicode">Unicode字符表示</a>)
  *
  * <p>A {@code String} represents a string in the UTF-16 format
  * in which <em>supplementary characters</em> are represented by <em>surrogate
  * pairs</em> (see the section <a href="Character.html#unicode">Unicode
  * Character Representations</a> in the {@code Character} class for
  * more information).
+ *
+ * 索引值是指字节编码单位，所以一个补充字符在 String 类中占了两个位置。
+ *
  * Index values refer to {@code char} code units, so a supplementary
  * character uses two positions in a {@code String}.
+ *
+ * <p>字符串类提供处理 Unicode 字符的方式，除了那些用于处理 Unicode 字符（即 char 值）
+ * 的代码之外。
+ *
  * <p>The {@code String} class provides methods for dealing with
  * Unicode code points (i.e., characters), in addition to those for
  * dealing with Unicode code units (i.e., {@code char} values).
@@ -108,18 +159,22 @@ import java.util.regex.PatternSyntaxException;
  * @since   JDK1.0
  */
 @SuppressWarnings("all")
-public final class String
-    implements java.io.Serializable, Comparable<String>, CharSequence {
-    /** The value is used for character storage. */
+public final class String implements java.io.Serializable, Comparable<String>, CharSequence {
+    /** 该值用于字符的存储。 */
     private final char value[];
 
-    /** Cache the hash code for the string */
-    private int hash; // Default to 0
+    /** 缓存字符串的哈希编码 */
+    private int hash; // 默认为0
 
-    /** use serialVersionUID from JDK 1.0.2 for interoperability */
+    /** 使用JDK 1.0.2的 SerialVersionUID进行互操作性 */
     private static final long serialVersionUID = -6849794470754667710L;
 
     /**
+     * 类字符串是序列化流协议内的特殊套件。
+     *
+     * 一个字符串实例依据 <a href="{@docRoot}/../platform/serialization/spec/output.html">
+     * 对象序列化规则，6.2 章节，"流元素"</a> 被写进 ObjectOutputStream 中。
+     *
      * Class String is special cased within the Serialization Stream Protocol.
      *
      * A String instance is written into an ObjectOutputStream according to
@@ -130,6 +185,9 @@ public final class String
         new ObjectStreamField[0];
 
     /**
+     * 初始化一个新创建的 String 对象，目的是让它代表一个空字符序列。注意该构造函数的使用
+     * 是非必须的，因为字符串都是不可变的。
+     *
      * Initializes a newly created {@code String} object so that it represents
      * an empty character sequence.  Note that use of this constructor is
      * unnecessary since Strings are immutable.
@@ -139,6 +197,10 @@ public final class String
     }
 
     /**
+     * 初始化一个新创建的 String 对象，目的是让它代表与参数相同的字符序列；换句话说，
+     * 新创建的字符串是目标参数字符串的一个复制。除非明确需要原始副本，否则该构造函数
+     * 也是非必须的，因为字符串都是不可变的。
+     *
      * Initializes a newly created {@code String} object so that it represents
      * the same sequence of characters as the argument; in other words, the
      * newly created string is a copy of the argument string. Unless an
