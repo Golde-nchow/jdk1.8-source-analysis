@@ -350,6 +350,7 @@ public final class String implements java.io.Serializable, Comparable<String>, C
         int n = count;
         for (int i = offset; i < end; i++) {
             int c = codePoints[i];
+            // Bmp 代码点：16位
             if (Character.isBmpCodePoint(c))
                 continue;
             else if (Character.isValidCodePoint(c))
@@ -362,9 +363,11 @@ public final class String implements java.io.Serializable, Comparable<String>, C
 
         for (int i = offset, j = 0; i < end; i++, j++) {
             int c = codePoints[i];
+            // 若为16位字符，则直接转换为 char，因为 char 也是16位
             if (Character.isBmpCodePoint(c))
                 v[j] = (char)c;
             else
+                // 若为 Surrogate，则在数组占两个位置
                 Character.toSurrogates(c, v, j++);
         }
 
