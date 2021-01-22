@@ -40,7 +40,22 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 /**
- * 科普：Unicode代码点，指的是一个字符使用了 ASCII 编码对应的数字，例如: 'a'=97
+ * 科普：Unicode 是字符的一个标准的字符编码方案。为每个字符都设置了统一的二进制编码。
+ *      通常使用2个字节代表一个字符，所以 Unicode 每个平面都可以组合出 65535 个字符，
+ *      一共17个平面。String 可以识别 Unicode 的字符集，包括：UTF-8，UTF-16等。
+ *
+ *      1、codepoint：
+ *         unicode的范围从000000 - 10FFFF，char 的范围只能从 \u0000到\uffff；
+ *         所以要用 char 显示剩下的，大于 Ox10000 的部分，只能用两个字符来表示；
+ *         那么问题来了，如何识别字符是一个字符组成的还是两个字符组成的？
+ *      2、Surrogate：
+ *         UTF-16最多编码为 65535，若大于 65535，Unicode的解决方案是从 65535 中
+ *         取出 2048个编码，规定他们是 Surrogate，两个一组，重新组合。
+ *         · 编号为 U+D800 至 U+DBFF 的规定为「High Surrogates」，共1024个。 '\uD800'与'\uDBFF'之间；
+ *         · 编号为 U+DC00 至 U+DFFF 的规定为「Low Surrogates」，共1024个。  '\uDC00'与'\uDFFF'之间；
+ *         · 高代理项代码单元 + 低代理项代码单元 = codepoint，可以额外表示 1024*1024个字符。
+ *
+ * ==============================================================================================
  *
  * String类表示字符的串。Java程序中的字符串文字，例如 “abc”，均是该类的实现。
  *
@@ -331,7 +346,7 @@ public final class String implements java.io.Serializable, Comparable<String>, C
 
         final int end = offset + count;
 
-        // Pass 1: Compute precise size of char[]
+        // Pass 1: 校验字符数组的合法性
         int n = count;
         for (int i = offset; i < end; i++) {
             int c = codePoints[i];
@@ -342,7 +357,7 @@ public final class String implements java.io.Serializable, Comparable<String>, C
             else throw new IllegalArgumentException(Integer.toString(c));
         }
 
-        // Pass 2: Allocate and fill in char[]
+        // Pass 2: 分配并填充 char 数组
         final char[] v = new char[n];
 
         for (int i = offset, j = 0; i < end; i++, j++) {
@@ -357,6 +372,8 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 从一个8位整形数组，分配一个新的 String 对象
+     *
      * Allocates a new {@code String} constructed from a subarray of an array
      * of 8-bit integer values.
      *
