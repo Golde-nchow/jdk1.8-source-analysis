@@ -637,10 +637,16 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 构造一个新的、通过平台默认的编码来对截取的数组进行解码的字符串。新字符串的长度是 charset
+     * 的一个函数，因此可能不等于截取数组的长度。
+     *
      * Constructs a new {@code String} by decoding the specified subarray of
      * bytes using the platform's default charset.  The length of the new
      * {@code String} is a function of the charset, and hence may not be equal
      * to the length of the subarray.
+     *
+     * 当给出的字节数组无法使用给定的字符集，那么该构造器的行为是未指定的（这个词语有点怪）.
+     * 在需要对解码过程更多的控制时，应使用 CharsetDecoder 类。
      *
      * <p> The behavior of this constructor when the given bytes are not valid
      * in the default charset is unspecified.  The {@link
@@ -648,17 +654,16 @@ public final class String implements java.io.Serializable, Comparable<String>, C
      * over the decoding process is required.
      *
      * @param  bytes
-     *         The bytes to be decoded into characters
+     *         要解码为字符的字节数组
      *
      * @param  offset
-     *         The index of the first byte to decode
+     *         偏移量
      *
      * @param  length
-     *         The number of bytes to decode
+     *         解码的字节数
      *
      * @throws  IndexOutOfBoundsException
-     *          If the {@code offset} and the {@code length} arguments index
-     *          characters outside the bounds of the {@code bytes} array
+     *          若偏移量、长度超过了字节数组的界限
      *
      * @since  JDK1.1
      */
