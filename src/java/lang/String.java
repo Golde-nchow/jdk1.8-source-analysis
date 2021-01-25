@@ -773,10 +773,7 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
-     * Returns {@code true} if, and only if, {@link #length()} is {@code 0}.
-     *
-     * @return {@code true} if {@link #length()} is {@code 0}, otherwise
-     * {@code false}
+     * 如果 length() 为 0，返回 true，否则返回 false
      *
      * @since 1.6
      */
