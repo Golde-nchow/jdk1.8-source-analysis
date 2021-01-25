@@ -536,10 +536,15 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 构造一个新的、通过指定编码来对截取的数组进行解码的字符串。新字符串的长度是 charset
+     * 的一个函数，因此可能不等于截取数组的长度。
+     *
      * Constructs a new {@code String} by decoding the specified subarray of
      * bytes using the specified {@linkplain java.nio.charset.Charset charset}.
      * The length of the new {@code String} is a function of the charset, and
      * hence may not be equal to the length of the subarray.
+     *
+     * 该方法始终使用 Charset 的值，来替换畸形输入和未处理的字符序列。
      *
      * <p> This method always replaces malformed-input and unmappable-character
      * sequences with this charset's default replacement string.  The {@link
@@ -547,21 +552,19 @@ public final class String implements java.io.Serializable, Comparable<String>, C
      * over the decoding process is required.
      *
      * @param  bytes
-     *         The bytes to be decoded into characters
+     *         要解码为字符的字节数组
      *
      * @param  offset
-     *         The index of the first byte to decode
+     *         解码第一个字节的索
      *
      * @param  length
-     *         The number of bytes to decode
+     *         解码的字节数
      *
      * @param  charset
-     *         The {@linkplain java.nio.charset.Charset charset} to be used to
-     *         decode the {@code bytes}
+     *         使用 {@linkplain java.nio.charset.Charset charset} 类来进行解码
      *
      * @throws  IndexOutOfBoundsException
-     *          If the {@code offset} and {@code length} arguments index
-     *          characters outside the bounds of the {@code bytes} array
+     *          若偏移量、长度超过了字节数组的界限
      *
      * @since  1.6
      */
