@@ -468,15 +468,24 @@ public final class String implements java.io.Serializable, Comparable<String>, C
         this(ascii, hibyte, 0, ascii.length);
     }
 
-    /* Common private utility method used to bounds check the byte array
+    /*
+     * 核对界限。
+     *
+     * 用于绑定的常用私有实用程序方法，检查 String(byte[],..) 构造函数
+     * 使用的字节数组和请求的偏移和长度值。
+     *
+     * Common private utility method used to bounds check the byte array
      * and requested offset & length values used by the String(byte[],..)
      * constructors.
      */
     private static void checkBounds(byte[] bytes, int offset, int length) {
+        // 长度 >= 0
         if (length < 0)
             throw new StringIndexOutOfBoundsException(length);
+        // 偏移量 >= 0
         if (offset < 0)
             throw new StringIndexOutOfBoundsException(offset);
+        // 偏移量不能超过指定长度；例：偏移量为3，截取的数组长度不能小于3
         if (offset > bytes.length - length)
             throw new StringIndexOutOfBoundsException(offset + length);
     }
