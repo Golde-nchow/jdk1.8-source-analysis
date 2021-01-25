@@ -742,13 +742,17 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /*
+    * 包私有构造器，用于迅速地分享数组值。该构造器的 share 值始终为 true。
+    * 需要一个单独的构造函数，因为我们已经拥有一个公共的 String(char[]) 构造函数，
+    * 用于生成给定字符数组的副本。
+    *
     * Package private constructor which shares value array for speed.
     * this constructor is always expected to be called with share==true.
     * a separate constructor is needed because we already have a public
     * String(char[]) constructor that makes a copy of the given char[].
     */
     String(char[] value, boolean share) {
-        // assert share : "unshared not supported";
+        // 对 share 值进行断言 : "不支持 shared == false";
         this.value = value;
     }
 
