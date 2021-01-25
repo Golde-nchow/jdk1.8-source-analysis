@@ -759,12 +759,14 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 返回字符串的长度。
+     * 该长度和字符串内的 <a href="Character.html#unicode">Unicode代码点</a> 的数量一致。
+     *
      * Returns the length of this string.
      * The length is equal to the number of <a href="Character.html#unicode">Unicode
      * code units</a> in the string.
      *
-     * @return  the length of the sequence of characters represented by this
-     *          object.
+     * @return  该对象表示的字符序列的长度。
      */
     public int length() {
         return value.length;
