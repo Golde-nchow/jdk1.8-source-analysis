@@ -717,17 +717,23 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 分配一个新的、由 StringBuffer 构造出来的字符串。字符串缓冲区的内容都是复制的，
+     * 对缓冲区的修改不会影响新创建的字符串。
+     *
      * Allocates a new string that contains the sequence of characters
      * currently contained in the string builder argument. The contents of the
      * string builder are copied; subsequent modification of the string builder
      * does not affect the newly created string.
+     *
+     * 提供此构造器来简易地迁移到 StringBuilder。通过 toString 方法来获取 StringBuilder
+     * 内的字符串可能会更快，并且通常是优先选择的。
      *
      * <p> This constructor is provided to ease migration to {@code
      * StringBuilder}. Obtaining a string from a string builder via the {@code
      * toString} method is likely to run faster and is generally preferred.
      *
      * @param   builder
-     *          A {@code StringBuilder}
+     *          {@code StringBuilder}类
      *
      * @since  1.5
      */
