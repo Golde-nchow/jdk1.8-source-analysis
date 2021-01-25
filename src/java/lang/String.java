@@ -536,7 +536,7 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
-     * 构造一个新的、通过指定编码来对截取的数组进行解码的字符串。新字符串的长度是 charset
+     * 构造一个新的、通过指定 Charset 类来对截取的数组进行解码的字符串。新字符串的长度是 charset
      * 的一个函数，因此可能不等于截取数组的长度。
      *
      * Constructs a new {@code String} by decoding the specified subarray of
@@ -544,7 +544,7 @@ public final class String implements java.io.Serializable, Comparable<String>, C
      * The length of the new {@code String} is a function of the charset, and
      * hence may not be equal to the length of the subarray.
      *
-     * 该方法始终使用 Charset 的值，来替换畸形输入和未处理的字符序列。
+     * 该方法始终使用 Charset 类的值，来替换畸形输入和未处理的字符序列。
      *
      * <p> This method always replaces malformed-input and unmappable-character
      * sequences with this charset's default replacement string.  The {@link
@@ -609,10 +609,15 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 构造一个新的、通过指定 Charset 类来对截取的数组进行解码的字符串。新字符串的长度是 charset
+     * 的一个函数，因此可能不等于截取数组的长度。
+     *
      * Constructs a new {@code String} by decoding the specified array of
      * bytes using the specified {@linkplain java.nio.charset.Charset charset}.
      * The length of the new {@code String} is a function of the charset, and
      * hence may not be equal to the length of the byte array.
+     *
+     * 该方法始终使用 Charset 类的值，来替换畸形输入和未处理的字符序列。
      *
      * <p> This method always replaces malformed-input and unmappable-character
      * sequences with this charset's default replacement string.  The {@link
@@ -620,11 +625,10 @@ public final class String implements java.io.Serializable, Comparable<String>, C
      * over the decoding process is required.
      *
      * @param  bytes
-     *         The bytes to be decoded into characters
+     *         要解码为字符的字节数组
      *
      * @param  charset
-     *         The {@linkplain java.nio.charset.Charset charset} to be used to
-     *         decode the {@code bytes}
+     *         使用 {@linkplain java.nio.charset.Charset charset} 类来进行解码
      *
      * @since  1.6
      */
