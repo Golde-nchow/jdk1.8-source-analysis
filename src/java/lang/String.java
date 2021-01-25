@@ -699,13 +699,16 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 分配一个新的、由字符串缓冲区构造出来的字符串。字符串缓冲区的内容都是复制的，
+     * 对缓冲区的修改不会影响新创建的字符串。
+     *
      * Allocates a new string that contains the sequence of characters
      * currently contained in the string buffer argument. The contents of the
      * string buffer are copied; subsequent modification of the string buffer
      * does not affect the newly created string.
      *
      * @param  buffer
-     *         A {@code StringBuffer}
+     *         {@code StringBuffer}类
      */
     public String(StringBuffer buffer) {
         synchronized(buffer) {
