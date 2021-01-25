@@ -434,6 +434,8 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 该方法不进行翻译，因为和上面的方法一致。
+     *
      * Allocates a new {@code String} containing characters constructed from
      * an array of 8-bit integer values. Each character <i>c</i>in the
      * resulting string is constructed from the corresponding component
