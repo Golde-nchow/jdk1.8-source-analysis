@@ -380,32 +380,32 @@ public final class String implements java.io.Serializable, Comparable<String>, C
      * Allocates a new {@code String} constructed from a subarray of an array
      * of 8-bit integer values.
      *
+     * <p> offset 参数是截取数组的第一个字节数据的索引，count 参数定义了截取数组的长度。
+     *
      * <p> The {@code offset} argument is the index of the first byte of the
      * subarray, and the {@code count} argument specifies the length of the
      * subarray.
      *
+     * <p> 截取数组的每个字节都会被转换为一个 char，如上述方法所示。
+     *
      * <p> Each {@code byte} in the subarray is converted to a {@code char} as
      * specified in the method above.
      *
-     * @deprecated This method does not properly convert bytes into characters.
-     * As of JDK&nbsp;1.1, the preferred way to do this is via the
-     * {@code String} constructors that take a {@link
-     * java.nio.charset.Charset}, charset name, or that use the platform's
-     * default charset.
+     * @deprecated 该方法已过期。此方法未正确将字节转换为字符，截止 JDK1.1，优先通过附带
+     * {@link java.nio.charset.Charset}、或者编码名称、或者默认编码的 String 对象的构造器。
      *
-     * @param  ascii
-     *         The bytes to be converted to characters
+     * @param  ascii 转换为 char 类型的字节数据
      *
-     * @param  hibyte
+     * @param  hibyte 每个16位 Unicode 编码单元的高八位。
      *         The top 8 bits of each 16-bit Unicode code unit
      *
      * @param  offset
-     *         The initial offset
+     *         默认偏移值
      * @param  count
-     *         The length
+     *         整形数组的数量
      *
      * @throws  IndexOutOfBoundsException
-     *          If the {@code offset} or {@code count} argument is invalid
+     *          若 {@code offset} 或者 {@code count} 参数不合法。
      *
      * @see  #String(byte[], int)
      * @see  #String(byte[], int, int, java.lang.String)
