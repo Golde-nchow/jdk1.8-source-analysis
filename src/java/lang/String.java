@@ -809,10 +809,17 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 返回指定索引的字符（以 Unicode代码点 的形式）。
+     * 该索引是指 char 的值（Unicode代码单元），范围为 0 至 length()-1.
+     *
      * Returns the character (Unicode code point) at the specified
      * index. The index refers to {@code char} values
      * (Unicode code units) and ranges from {@code 0} to
      * {@link #length()}{@code  - 1}.
+     *
+     * 若 char 值给出的索引是处于高代理位，并且后面的索引小于此字符串的长度，
+     * 并且后面索引的 char 值是处于低代理位范围内，则返回与此代码点对应的
+     * 补充代码点。
      *
      * <p> If the {@code char} value specified at the given index
      * is in the high-surrogate range, the following index is less
@@ -822,12 +829,9 @@ public final class String implements java.io.Serializable, Comparable<String>, C
      * corresponding to this surrogate pair is returned. Otherwise,
      * the {@code char} value at the given index is returned.
      *
-     * @param      index the index to the {@code char} values
-     * @return     the code point value of the character at the
-     *             {@code index}
-     * @exception  IndexOutOfBoundsException  if the {@code index}
-     *             argument is negative or not less than the length of this
-     *             string.
+     * @param      index 索引值
+     * @return     对应索引的 char 值的代码点
+     * @exception  IndexOutOfBoundsException 若索引值不在字符串的范围内
      * @since      1.5
      */
     public int codePointAt(int index) {
