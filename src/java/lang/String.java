@@ -930,6 +930,9 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 从该字符串复制字符到从目标位置开始的目标的数组。
+     * 该方法不会检查任何界限。
+     *
      * Copy characters from this string into dst starting at dstBegin.
      * This method doesn't perform any range checking.
      */
