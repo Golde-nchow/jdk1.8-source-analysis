@@ -878,6 +878,10 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 返回在该字符串中指定范围的 Unicode 代码点数量。文本的范围从 beginIndex 至
+     * endIndex - 1。因此字符的长度为 endIndex-beginIndex。若 surrogate 不是
+     * 一对地存在的，那么就会当做一个代码点。
+     *
      * Returns the number of Unicode code points in the specified text
      * range of this {@code String}. The text range begins at the
      * specified {@code beginIndex} and extends to the
@@ -886,16 +890,10 @@ public final class String implements java.io.Serializable, Comparable<String>, C
      * {@code endIndex-beginIndex}. Unpaired surrogates within
      * the text range count as one code point each.
      *
-     * @param beginIndex the index to the first {@code char} of
-     * the text range.
-     * @param endIndex the index after the last {@code char} of
-     * the text range.
-     * @return the number of Unicode code points in the specified text
-     * range
-     * @exception IndexOutOfBoundsException if the
-     * {@code beginIndex} is negative, or {@code endIndex}
-     * is larger than the length of this {@code String}, or
-     * {@code beginIndex} is larger than {@code endIndex}.
+     * @param beginIndex 开始位置索引
+     * @param endIndex 结束位置索引
+     * @return 指定范围内，Unicode代码点的数量。
+     * @exception IndexOutOfBoundsException 若 beginIndex、endIndex 不在字符串范围内
      * @since  1.5
      */
     public int codePointCount(int beginIndex, int endIndex) {
