@@ -904,23 +904,21 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 通过 index + 代码点偏移量，获取索引。若不是一对的 surrogate，
+     * 那么就当做一个代码点。
+     *
      * Returns the index within this {@code String} that is
      * offset from the given {@code index} by
      * {@code codePointOffset} code points. Unpaired surrogates
      * within the text range given by {@code index} and
      * {@code codePointOffset} count as one code point each.
      *
-     * @param index the index to be offset
-     * @param codePointOffset the offset in code points
-     * @return the index within this {@code String}
-     * @exception IndexOutOfBoundsException if {@code index}
-     *   is negative or larger then the length of this
-     *   {@code String}, or if {@code codePointOffset} is positive
-     *   and the substring starting with {@code index} has fewer
-     *   than {@code codePointOffset} code points,
-     *   or if {@code codePointOffset} is negative and the substring
-     *   before {@code index} has fewer than the absolute value
-     *   of {@code codePointOffset} code points.
+     * @param index 要偏移的索引
+     * @param codePointOffset 代码点的偏移量
+     * @return 该字符串的索引
+     * @exception IndexOutOfBoundsException 若 index 不在字符串范围内,
+     *   或者 codePointOffset > index，或者 codePointOffset 是负数
+     *   并且索引前的子字符串小于codePointOffset的绝对值。
      * @since 1.5
      */
     public int offsetByCodePoints(int index, int codePointOffset) {
