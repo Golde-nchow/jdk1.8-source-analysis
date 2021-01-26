@@ -810,7 +810,7 @@ public final class String implements java.io.Serializable, Comparable<String>, C
 
     /**
      * 返回指定索引的字符（以 Unicode代码点 的形式）。
-     * 该索引是指 char 的值（Unicode代码单元），范围为 0 至 length()-1.
+     * 该索引引用 char 的值（Unicode代码单元），范围为 0 至 length()-1.
      *
      * Returns the character (Unicode code point) at the specified
      * index. The index refers to {@code char} values
@@ -819,7 +819,7 @@ public final class String implements java.io.Serializable, Comparable<String>, C
      *
      * 若 char 值给出的索引是处于高代理位，并且后面的索引小于此字符串的长度，
      * 并且后面索引的 char 值是处于低代理位范围内，则返回与此代码点对应的
-     * 补充代码点。
+     * 补充代码点。否则，只有对应索引的 char 值被返回。
      *
      * <p> If the {@code char} value specified at the given index
      * is in the high-surrogate range, the following index is less
@@ -842,10 +842,18 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 返回指定索引的前一个索引的 char 值代码点。
+     * 该索引引用 char 的值（Unicode代码单元），范围为 0 至 CharSequence#length()。
+     *
      * Returns the character (Unicode code point) before the specified
      * index. The index refers to {@code char} values
      * (Unicode code units) and ranges from {@code 1} to {@link
      * CharSequence#length() length}.
+     *
+     * 若 char 值在（index - 1）中是低代理位范围，且在（index - 2）不是负数，
+     * 且 (index - 2) 的值是高代理位，那么这一对 surrogate 代码点值就会被返回。
+     * 若 char 值在（index - 1）是一对 surrogate 中的高代理位或低代理位，
+     * 那么这个单独的 surrogate 值会被返回。
      *
      * <p> If the {@code char} value at {@code (index - 1)}
      * is in the low-surrogate range, {@code (index - 2)} is not
@@ -857,10 +865,8 @@ public final class String implements java.io.Serializable, Comparable<String>, C
      * surrogate value is returned.
      *
      * @param     index the index following the code point that should be returned
-     * @return    the Unicode code point value before the given index.
-     * @exception IndexOutOfBoundsException if the {@code index}
-     *            argument is less than 1 or greater than the length
-     *            of this string.
+     * @return    在给定的索引前的 Unicode 代码点
+     * @exception IndexOutOfBoundsException 若索引值不在字符串的范围内
      * @since     1.5
      */
     public int codePointBefore(int index) {
