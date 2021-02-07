@@ -1418,19 +1418,28 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 利用词典顺序，忽略大小写地比较字符串。该方法返回一个整数，通过对每个字符
+     * 调用 toLowerCase 或 toUpperCase 进行比较。若不等，返回 ASCII 码差值。
+     *
+     * 原理是调用不区分大小写比较器的逻辑。
+     *
      * Compares two strings lexicographically, ignoring case
      * differences. This method returns an integer whose sign is that of
      * calling {@code compareTo} with normalized versions of the strings
      * where case differences have been eliminated by calling
      * {@code Character.toLowerCase(Character.toUpperCase(character))} on
      * each character.
+     *
      * <p>
+     * 注意：该比较器不会考虑语言环境，并且会导致某些区域设置的排序令人不满意。
+     * java.text 包提供了 Collators 来允许区域设置的排序。
+     *
      * Note that this method does <em>not</em> take locale into account,
      * and will result in an unsatisfactory ordering for certain locales.
      * The java.text package provides <em>collators</em> to allow
      * locale-sensitive ordering.
      *
-     * @param   str   the {@code String} to be compared.
+     * @param   str   被比较的字符串对象
      * @return  a negative integer, zero, or a positive integer as the
      *          specified String is greater than, equal to, or less
      *          than this String, ignoring case considerations.
