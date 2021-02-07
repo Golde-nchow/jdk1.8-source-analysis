@@ -1451,8 +1451,24 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 测试两个字符串区域是否相等。
      * Tests if two string regions are equal.
+     *
      * <p>
+     * String 对象的一个子串，和另一个 String对象的子串进行比较。若子串都有相同的序列，
+     * 则返回 true。String对象的子串范围在索引 toffset 到 (len + toffset - 1)，
+     * 另一个被比较的 String对象的子串范围在索引 ooffset 到 (len + ooffset - 1).
+     * 若出现结果为 false 的情况，则表示：
+     * <ul><li>{@code toffset} 是负数.
+     * <li>{@code ooffset} 是负数.
+     * <li>{@code toffset+len} 大于 {@code String} 对象的长度.
+     * <li>{@code ooffset+len} 大于另一个 {@code String} 对象的长度.
+     * <li>非负整数 <i>k</i> 小于 {@code len}
+     * 例如:
+     * {@code this.charAt(toffset + }<i>k</i>{@code ) != other.charAt(ooffset + }
+     * <i>k</i>{@code )}
+     * </ul>
+     *
      * A substring of this {@code String} object is compared to a substring
      * of the argument other. The result is true if these substrings
      * represent identical character sequences. The substring of this
@@ -1473,14 +1489,11 @@ public final class String implements java.io.Serializable, Comparable<String>, C
      * <i>k</i>{@code )}
      * </ul>
      *
-     * @param   toffset   the starting offset of the subregion in this string.
-     * @param   other     the string argument.
-     * @param   ooffset   the starting offset of the subregion in the string
-     *                    argument.
-     * @param   len       the number of characters to compare.
-     * @return  {@code true} if the specified subregion of this string
-     *          exactly matches the specified subregion of the string argument;
-     *          {@code false} otherwise.
+     * @param   toffset   当前字符串的开始索引
+     * @param   other     另一个字符串.
+     * @param   ooffset   另一个字符串的开始索引.
+     * @param   len       字符比较数量.
+     * @return  若匹配返回 true，否则 false;
      */
     public boolean regionMatches(int toffset, String other, int ooffset,
             int len) {
