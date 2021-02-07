@@ -962,8 +962,6 @@ public final class String implements java.io.Serializable, Comparable<String>, C
      *     dstBegin + (srcEnd-srcBegin) - 1
      * </pre></blockquote>
      *
-     *
-     *
      * @param      srcBegin   被复制字符串的开始字符的索引.
      * @param      srcEnd     被复制字符串的结束位置： srcEnd -1
      * @param      dst        目标数组.
@@ -1059,6 +1057,8 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 使用指定的编码将字符串的一系列字节进行解码，并将结果保存道一个新的字节数组。
+     *
      * Encodes this {@code String} into a sequence of bytes using the named
      * charset, storing the result into a new byte array.
      *
@@ -1068,13 +1068,12 @@ public final class String implements java.io.Serializable, Comparable<String>, C
      * over the encoding process is required.
      *
      * @param  charsetName
-     *         The name of a supported {@linkplain java.nio.charset.Charset
-     *         charset}
+     *         字符编码需要被 {@linkplain java.nio.charset.Charset charset} 支持
      *
-     * @return  The resultant byte array
+     * @return  结果字符数组
      *
      * @throws  UnsupportedEncodingException
-     *          If the named charset is not supported
+     *          编码不支持
      *
      * @since  JDK1.1
      */
@@ -1085,9 +1084,13 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 通过给定的 Charset 类，对字符串一系列的字节进行解码，并将结果储存到一个新字节数组。
+     *
      * Encodes this {@code String} into a sequence of bytes using the given
      * {@linkplain java.nio.charset.Charset charset}, storing the result into a
      * new byte array.
+     *
+     * <p> 该方法始终使用【默认替换数组】代替畸形输入和未处理的字符序列。
      *
      * <p> This method always replaces malformed-input and unmappable-character
      * sequences with this charset's default replacement byte array.  The
@@ -1108,6 +1111,8 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 使用平台默认的编码对字符串一系列的字节进行解码，并将结果储存到一个新字节数组。
+     *
      * Encodes this {@code String} into a sequence of bytes using the
      * platform's default charset, storing the result into a new byte array.
      *
