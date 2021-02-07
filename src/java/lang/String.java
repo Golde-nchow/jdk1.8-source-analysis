@@ -1167,17 +1167,18 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 比较字符串与指定 StringBuffer 的值。
+     * 有且只有当 String 与 StringBuffer 有相同的字符序列的时候，结果才返回 true。
+     * 该方法通过 StringBuffer 实现同步语义。
+     *
      * Compares this string to the specified {@code StringBuffer}.  The result
      * is {@code true} if and only if this {@code String} represents the same
      * sequence of characters as the specified {@code StringBuffer}. This method
      * synchronizes on the {@code StringBuffer}.
      *
-     * @param  sb
-     *         The {@code StringBuffer} to compare this {@code String} against
+     * @param  sb 与当前字符串进行比较的 StringBuffer 对象。
      *
-     * @return  {@code true} if this {@code String} represents the same
-     *          sequence of characters as the specified {@code StringBuffer},
-     *          {@code false} otherwise
+     * @return  返回 true，代表有相同的字符序列；否则返回 false.
      *
      * @since  1.4
      */
@@ -1201,18 +1202,19 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 通过 CharSequence 对象比较当前字符串。
+     * 有且只有当 String 与 CharSequence 有相同的字符序列的时候，结果才返回 true。
+     * 注意：若 CharSequence 的实现类是 StringBuffer，则会实现同步。
+     *
      * Compares this string to the specified {@code CharSequence}.  The
      * result is {@code true} if and only if this {@code String} represents the
      * same sequence of char values as the specified sequence. Note that if the
      * {@code CharSequence} is a {@code StringBuffer} then the method
      * synchronizes on it.
      *
-     * @param  cs
-     *         The sequence to compare this {@code String} against
+     * @param  cs 与当前字符串进行比较的 CharSequence 对象
      *
-     * @return  {@code true} if this {@code String} represents the same
-     *          sequence of char values as the specified sequence, {@code
-     *          false} otherwise
+     * @return  返回 true，代表有相同的字符序列；否则返回 false.
      *
      * @since  1.5
      */
