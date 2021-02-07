@@ -1652,15 +1652,14 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
-     * Tests if this string ends with the specified suffix.
+     * 判断字符串是否以指定后缀结束.
      *
-     * @param   suffix   the suffix.
-     * @return  {@code true} if the character sequence represented by the
-     *          argument is a suffix of the character sequence represented by
-     *          this object; {@code false} otherwise. Note that the
-     *          result will be {@code true} if the argument is the
-     *          empty string or is equal to this {@code String} object
-     *          as determined by the {@link #equals(Object)} method.
+     * 原理：调用 startWith(String prefix, int toffset)，开始位置为 end - suffix.length
+     *
+     * @param   suffix   后缀.
+     * @return 若字符序列匹配，则返回 true；否则返回 false；
+     *         注意：若后缀为空串，或相同引用（Object#equals校验后）
+     *         也会返回 true.
      */
     public boolean endsWith(String suffix) {
         return startsWith(suffix, value.length - suffix.value.length);
