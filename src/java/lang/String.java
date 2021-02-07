@@ -1516,7 +1516,8 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
-     * Tests if two string regions are equal.
+     * 测试两个字符串区域是否相等（是否忽略大小写版本）。
+     * 注释和上面的都是一致的。
      * <p>
      * A substring of this {@code String} object is compared to a substring
      * of the argument {@code other}. The result is {@code true} if these
