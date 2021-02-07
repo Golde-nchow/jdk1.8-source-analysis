@@ -1608,21 +1608,16 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 测试字符串的子串是否以指定位置的前缀开始。
+     *
      * Tests if the substring of this string beginning at the
      * specified index starts with the specified prefix.
      *
-     * @param   prefix    the prefix.
-     * @param   toffset   where to begin looking in this string.
-     * @return  {@code true} if the character sequence represented by the
-     *          argument is a prefix of the substring of this object starting
-     *          at index {@code toffset}; {@code false} otherwise.
-     *          The result is {@code false} if {@code toffset} is
-     *          negative or greater than the length of this
-     *          {@code String} object; otherwise the result is the same
-     *          as the result of the expression
-     *          <pre>
-     *          this.substring(toffset).startsWith(prefix)
-     *          </pre>
+     * @param   prefix    前缀.
+     * @param   toffset   开始位置.
+     * @return  若字符序列匹配，则返回 true；否则返回 false；
+     *          返回 false 也有可能是 toffset 为负数，或大于字符串长度。
+     *          其他结果都与 <pre> this.substring(toffset).startsWith(prefix) </pre>一致。
      */
     public boolean startsWith(String prefix, int toffset) {
         char ta[] = value;
