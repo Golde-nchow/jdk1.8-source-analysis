@@ -941,8 +941,16 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 从该字符串复制字符到目标字符数组。原理是 System#arraycopy
+     *
      * Copies characters from this string into the destination character
      * array.
+     *
+     * <p>
+     * 首个被复制的字符在索引 srcBegin 中；最后一个字符在索引 srcEnd-1 中
+     * （因此被复制的字符总数为 srcEnd-srcBegin）。被复制的字符复制到目标数组 dest，
+     * 从索引 destBengin 开始到结尾索引 (dstBegin + (srcEnd-srcBegin) - 1)。
+     *
      * <p>
      * The first character to be copied is at index {@code srcBegin};
      * the last character to be copied is at index {@code srcEnd-1}
@@ -954,21 +962,20 @@ public final class String implements java.io.Serializable, Comparable<String>, C
      *     dstBegin + (srcEnd-srcBegin) - 1
      * </pre></blockquote>
      *
-     * @param      srcBegin   index of the first character in the string
-     *                        to copy.
-     * @param      srcEnd     index after the last character in the string
-     *                        to copy.
-     * @param      dst        the destination array.
-     * @param      dstBegin   the start offset in the destination array.
+     *
+     *
+     * @param      srcBegin   被复制字符串的开始字符的索引.
+     * @param      srcEnd     被复制字符串的结束位置： srcEnd -1
+     * @param      dst        目标数组.
+     * @param      dstBegin   复制到目标数组的开始位置至最后
      * @exception IndexOutOfBoundsException If any of the following
      *            is true:
-     *            <ul><li>{@code srcBegin} is negative.
-     *            <li>{@code srcBegin} is greater than {@code srcEnd}
-     *            <li>{@code srcEnd} is greater than the length of this
-     *                string
-     *            <li>{@code dstBegin} is negative
-     *            <li>{@code dstBegin+(srcEnd-srcBegin)} is larger than
-     *                {@code dst.length}</ul>
+     *            <ul><li>{@code srcBegin} 是负数.
+     *            <li>{@code srcBegin} 大于 {@code srcEnd}
+     *            <li>{@code srcEnd} 超出数组界限
+     *            <li>{@code dstBegin} 是负数
+     *            <li>{@code dstBegin+(srcEnd-srcBegin)} 大于
+     *                {@code dst.length}，也就是超出数组界限</ul>
      */
     public void getChars(int srcBegin, int srcEnd, char dst[], int dstBegin) {
         if (srcBegin < 0) {
@@ -980,7 +987,8 @@ public final class String implements java.io.Serializable, Comparable<String>, C
         if (srcBegin > srcEnd) {
             throw new StringIndexOutOfBoundsException(srcEnd - srcBegin);
         }
-        // 把 value[srcBegin] 到 value[srcEnd-srcBegin] 范围的数据复制到 dst[dstBegin]开始
+        // 把 value[srcBegin] 到 value[srcBegin + (srcEnd-srcBegin) - 1] 范围的数据
+        // 复制到 dst[dstBegin]开始至结束
         System.arraycopy(value, srcBegin, dst, dstBegin, srcEnd - srcBegin);
     }
 
