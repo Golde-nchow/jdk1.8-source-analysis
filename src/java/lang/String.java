@@ -1361,9 +1361,15 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 一个不区分大小写的比较器。该比较器是可序列化的。
+     *
      * A Comparator that orders {@code String} objects as by
      * {@code compareToIgnoreCase}. This comparator is serializable.
+     *
      * <p>
+     * 注意：该比较器不会考虑语言环境，并且会导致某些区域设置的排序令人不满意。
+     * java.text 包提供了 Collators 来允许区域设置的排序。
+     *
      * Note that this Comparator does <em>not</em> take locale into account,
      * and will result in an unsatisfactory ordering for certain locales.
      * The java.text package provides <em>Collators</em> to allow
@@ -1386,12 +1392,16 @@ public final class String implements java.io.Serializable, Comparable<String>, C
             for (int i = 0; i < min; i++) {
                 char c1 = s1.charAt(i);
                 char c2 = s2.charAt(i);
+                // 直接比较
                 if (c1 != c2) {
+                    // 大写比较
                     c1 = Character.toUpperCase(c1);
                     c2 = Character.toUpperCase(c2);
+                    // 小写比较
                     if (c1 != c2) {
                         c1 = Character.toLowerCase(c1);
                         c2 = Character.toLowerCase(c2);
+                        // 3次比较后都不相等，直接返回ASCII码差值
                         if (c1 != c2) {
                             // No overflow because of numeric promotion
                             return c1 - c2;
@@ -1399,6 +1409,7 @@ public final class String implements java.io.Serializable, Comparable<String>, C
                     }
                 }
             }
+            // 若长度不等，返回长度差值.
             return n1 - n2;
         }
 
