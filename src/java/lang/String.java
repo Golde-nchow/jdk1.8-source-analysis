@@ -1248,30 +1248,23 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 比较 Sting对象 与另一个 String对象，忽略大小写限制。
+     *
      * Compares this {@code String} to another {@code String}, ignoring case
      * considerations.  Two strings are considered equal ignoring case if they
      * are of the same length and corresponding characters in the two strings
      * are equal ignoring case.
      *
-     * <p> Two characters {@code c1} and {@code c2} are considered the same
-     * ignoring case if at least one of the following is true:
+     * <p> 两个字符序列 {@code c1} 和 {@code c2} 若遵守其一，则忽略大小写限制:
      * <ul>
-     *   <li> The two characters are the same (as compared by the
-     *        {@code ==} operator)
-     *   <li> Applying the method {@link
-     *        java.lang.Character#toUpperCase(char)} to each character
-     *        produces the same result
-     *   <li> Applying the method {@link
-     *        java.lang.Character#toLowerCase(char)} to each character
-     *        produces the same result
+     *   <li> 两个对象是一致的 (通过 == 进行比较后)
+     *   <li> 每个字符都与 {@link java.lang.Character#toUpperCase(char)} 的结果一致.
+     *   <li> 每个字符都与 {@link java.lang.Character#toLowerCase(char)} 的结果一致.
      * </ul>
      *
-     * @param  anotherString
-     *         The {@code String} to compare this {@code String} against
+     * @param  anotherString 与当前 String对象 进行比较的 另一个String对象。
      *
-     * @return  {@code true} if the argument is not {@code null} and it
-     *          represents an equivalent {@code String} ignoring case; {@code
-     *          false} otherwise
+     * @return  返回 true，代表有相同的字符序列；否则返回 false.
      *
      * @see  #equals(Object)
      */
@@ -1283,6 +1276,17 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 按词典顺序比较两个字符串。该比较是基于字符串中，每个字符的 Unicode 值。
+     * 若String对象在参数字符串（被比较的值）之前，则结果是负整数。
+     * 若String对象在参数字符串之后，则结果是正整数。
+     * 若结果相等，则返回零。
+     * compareTo 方法返回 0 的时候，equals 方法也会返回 true.
+     *
+     * 例如：
+     * String s1 = "abc";
+     * String s2 = "abcdefg";
+     * 那么，返回的结果是 -4；
+     *
      * Compares two strings lexicographically.
      * The comparison is based on the Unicode value of each character in
      * the strings. The character sequence represented by this
@@ -1294,7 +1298,21 @@ public final class String implements java.io.Serializable, Comparable<String>, C
      * follows the argument string. The result is zero if the strings
      * are equal; {@code compareTo} returns {@code 0} exactly when
      * the {@link #equals(Object)} method would return {@code true}.
+     *
      * <p>
+     * 这是词典排序的定义。若两个字符串都是不同的，相同的索引的值肯定不同，或者长度不一致。
+     * 如果它们在一个或多个索引位置上有不同的字符，则k是此类索引的最小值；
+     * 然后，其在位置k处的字符具有较小值的字符串（通过使用 &lt; 运算符确定）
+     * 按字典顺序位于另一个字符串之前。因此，compareTo 返回两个字符值在 k 值的差值。
+     * <blockquote><pre>
+     * this.charAt(k)-anotherString.charAt(k)
+     * </pre></blockquote>
+     *
+     * 例如：
+     * String s1 = "abcdefg";
+     * String s2 = "abedefg";
+     * c=99, e=101；返回的结果是 -2
+     *
      * This is the definition of lexicographic ordering. If two strings are
      * different, then either they have different characters at some index
      * that is a valid index for both strings, or their lengths are different,
@@ -1316,7 +1334,7 @@ public final class String implements java.io.Serializable, Comparable<String>, C
      * this.length()-anotherString.length()
      * </pre></blockquote>
      *
-     * @param   anotherString   the {@code String} to be compared.
+     * @param   anotherString 被比较的值.
      * @return  the value {@code 0} if the argument string is equal to
      *          this string; a value less than {@code 0} if this string
      *          is lexicographically less than the string argument; and a
