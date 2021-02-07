@@ -1130,16 +1130,16 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 通过指定对象，比较字符串的值。结果返回 true，仅为参数不为空，且是一个 String 对象时。
+     *
      * Compares this string to the specified object.  The result is {@code
      * true} if and only if the argument is not {@code null} and is a {@code
      * String} object that represents the same sequence of characters as this
      * object.
      *
-     * @param  anObject
-     *         The object to compare this {@code String} against
+     * @param  anObject 字符串的比较值
      *
-     * @return  {@code true} if the given object represents a {@code String}
-     *          equivalent to this string, {@code false} otherwise
+     * @return  若字符串对象与该字符串相等，则返回 true，否则 false.
      *
      * @see  #compareTo(String)
      * @see  #equalsIgnoreCase(String)
