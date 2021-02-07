@@ -1638,16 +1638,13 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
-     * Tests if this string starts with the specified prefix.
+     * 测试字符串的子串是否以指定前缀开始.
+     * 原理：调用 startWith(String prefix, int toffset)，开始位置为0
      *
-     * @param   prefix   the prefix.
-     * @return  {@code true} if the character sequence represented by the
-     *          argument is a prefix of the character sequence represented by
-     *          this string; {@code false} otherwise.
-     *          Note also that {@code true} will be returned if the
-     *          argument is an empty string or is equal to this
-     *          {@code String} object as determined by the
-     *          {@link #equals(Object)} method.
+     * @param   prefix   前缀.
+     * @return  若字符序列匹配，则返回 true；否则返回 false；
+     *          注意：若前缀为空串，或相同引用（Object#equals校验后）
+     *          也会返回 true.
      * @since   1. 0
      */
     public boolean startsWith(String prefix) {
