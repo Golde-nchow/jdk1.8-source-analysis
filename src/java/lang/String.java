@@ -1835,6 +1835,13 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 返回在该字符串里的，最后一个出现的指定字符。
+     *
+     * 1、对于字符值 ch 从0到0xFFFF（包括）范围，this.chat(k) == ch 返回 true。
+     * 2、对于 ch 的其他值，this.codePointAt(k) == ch 返回 true。
+     * 3、其他条件，若该字符没有出现在该字符串中，则返回 -1。
+     * 4、该方法是从最后的元素开始搜寻。
+     *
      * Returns the index within this string of the last occurrence of
      * the specified character. For values of {@code ch} in the
      * range from 0 to 0xFFFF (inclusive), the index (in Unicode code
@@ -1852,10 +1859,9 @@ public final class String implements java.io.Serializable, Comparable<String>, C
      * {@code String} is searched backwards starting at the last
      * character.
      *
-     * @param   ch   a character (Unicode code point).
-     * @return  the index of the last occurrence of the character in the
-     *          character sequence represented by this object, or
-     *          {@code -1} if the character does not occur.
+     * @param   ch   搜寻的字符 (Unicode 编码单元).
+     * @return  返回字符串中指定字符最后一次出现的索引，
+     *          或者返回 {@code -1} 若这个字符没有出现。
      */
     public int lastIndexOf(int ch) {
         return lastIndexOf(ch, value.length - 1);
