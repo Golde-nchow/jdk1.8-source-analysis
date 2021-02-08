@@ -1868,6 +1868,17 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 返回字符串中指定字符最后一次出现的索引，并从指定索引倒序查找。
+     *
+     * 1、对于 ch 值在 0 至 0xFFFF（包括）范围中：
+     *    this.charAt(k) == ch（k >= fromIndex）返回 true。
+     *
+     * 2、对于 ch 的其他值：
+     *    this.codePointAt(k) == ch （k >= fromIndex）返回 true。
+     *
+     * 3、在任意情况下，若没有这样的字符出现在字符串指定索引或后面的索引中，
+     *    那么返回 -1。
+     *
      * Returns the index within this string of the last occurrence of
      * the specified character, searching backward starting at the
      * specified index. For values of {@code ch} in the range
@@ -1885,21 +1896,14 @@ public final class String implements java.io.Serializable, Comparable<String>, C
      * string at or before position {@code fromIndex}, then
      * {@code -1} is returned.
      *
-     * <p>All indices are specified in {@code char} values
-     * (Unicode code units).
+     * <p> 所有的索引都用 char 值（Unicode编码单元）定义
      *
-     * @param   ch          a character (Unicode code point).
-     * @param   fromIndex   the index to start the search from. There is no
-     *          restriction on the value of {@code fromIndex}. If it is
-     *          greater than or equal to the length of this string, it has
-     *          the same effect as if it were equal to one less than the
-     *          length of this string: this entire string may be searched.
-     *          If it is negative, it has the same effect as if it were -1:
-     *          -1 is returned.
-     * @return  the index of the last occurrence of the character in the
-     *          character sequence represented by this object that is less
-     *          than or equal to {@code fromIndex}, or {@code -1}
-     *          if the character does not occur before that point.
+     * @param   ch          搜寻的字符.
+     * @param   fromIndex   开始搜索的索引。该值没有限制。
+     *                      1、若 fromIndex >= length，与 <= length 有相同的结果：倒序搜索整个字符串。
+     *                      2、若它是负数，与值为 -1 的结果相同：返回 -1。
+     * @return  返回字符串中指定字符第一次出现的索引，并且索引 <= fromIndex；
+     *          或者返回 {@code -1} 若这个字符没有出现。
      */
     public int lastIndexOf(int ch, int fromIndex) {
         if (ch < Character.MIN_SUPPLEMENTARY_CODE_POINT) {
@@ -1919,7 +1923,7 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
-     * Handles (rare) calls of lastIndexOf with a supplementary character.
+     * 处理带有补充字符的 indexOf 调用（很少用到）
      */
     private int lastIndexOfSupplementary(int ch, int fromIndex) {
         if (Character.isValidCodePoint(ch)) {
