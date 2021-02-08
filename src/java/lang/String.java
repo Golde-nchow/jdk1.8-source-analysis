@@ -2066,9 +2066,15 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 返回最后一个出现目标子串的下标。
+     * 最后出现的空串 "" 被认为在下标 {@code this.length()} 处。
+     * 例如："abcd".lastIndexOf(""); 返回值为 4.
+     *
      * Returns the index within this string of the last occurrence of the
      * specified substring.  The last occurrence of the empty string ""
      * is considered to occur at the index value {@code this.length()}.
+     *
+     * （下面这句不翻译，对于我来说是废话）
      *
      * <p>The returned index is the largest value <i>k</i> for which:
      * <blockquote><pre>
@@ -2076,17 +2082,20 @@ public final class String implements java.io.Serializable, Comparable<String>, C
      * </pre></blockquote>
      * If no such value of <i>k</i> exists, then {@code -1} is returned.
      *
-     * @param   str   the substring to search for.
-     * @return  the index of the last occurrence of the specified substring,
-     *          or {@code -1} if there is no such occurrence.
+     * @param   str   搜寻的子串.
+     * @return  最后出现该子串的索引位置，若没有该子串则返回 -1.
      */
     public int lastIndexOf(String str) {
         return lastIndexOf(str, value.length);
     }
 
     /**
+     * 返回最后一个出现目标子串的下标。倒序地从指定位置开始搜索。
+     *
      * Returns the index within this string of the last occurrence of the
      * specified substring, searching backward starting at the specified index.
+     *
+     * （下面这句不翻译，对于我来说是废话）
      *
      * <p>The returned index is the largest value <i>k</i> for which:
      * <blockquote><pre>
@@ -2094,11 +2103,9 @@ public final class String implements java.io.Serializable, Comparable<String>, C
      * </pre></blockquote>
      * If no such value of <i>k</i> exists, then {@code -1} is returned.
      *
-     * @param   str         the substring to search for.
-     * @param   fromIndex   the index to start the search from.
-     * @return  the index of the last occurrence of the specified substring,
-     *          searching backward from the specified index,
-     *          or {@code -1} if there is no such occurrence.
+     * @param   str         查找的子串.
+     * @param   fromIndex   倒序开始查找的位置.
+     * @return  最后出现该子串的索引位置，若没有该子串则返回 -1.
      */
     public int lastIndexOf(String str, int fromIndex) {
         return lastIndexOf(value, 0, value.length,
@@ -2106,15 +2113,18 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 此方法是字符串和 AbstractStringBuilder 共享的代码，用于执行搜索。
+     * source 数组是被搜索的字符数组，target 字符串是要匹配的子串。
+     *
      * Code shared by String and AbstractStringBuilder to do searches. The
      * source is the character array being searched, and the target
      * is the string being searched for.
      *
-     * @param   source       the characters being searched.
-     * @param   sourceOffset offset of the source string.
-     * @param   sourceCount  count of the source string.
-     * @param   target       the characters being searched for.
-     * @param   fromIndex    the index to begin searching from.
+     * @param   source       搜索的字符数组.
+     * @param   sourceOffset 字符数组的开始位置.
+     * @param   sourceCount  字符数组的长度.
+     * @param   target       将要匹配的子串.
+     * @param   fromIndex    从指定索引开始查找.
      */
     static int lastIndexOf(char[] source, int sourceOffset, int sourceCount,
             String target, int fromIndex) {
@@ -2124,17 +2134,20 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 此方法是字符串和 AbstractStringBuilder 共享的代码，用于执行搜索。
+     * source 数组是被搜索的字符数组，target 字符串是要匹配的子串。
+     *
      * Code shared by String and StringBuffer to do searches. The
      * source is the character array being searched, and the target
      * is the string being searched for.
      *
-     * @param   source       the characters being searched.
-     * @param   sourceOffset offset of the source string.
-     * @param   sourceCount  count of the source string.
-     * @param   target       the characters being searched for.
-     * @param   targetOffset offset of the target string.
-     * @param   targetCount  count of the target string.
-     * @param   fromIndex    the index to begin searching from.
+     * @param   source       搜索的字符数组.
+     * @param   sourceOffset 字符数组的开始位置.
+     * @param   sourceCount  字符数组的长度.
+     * @param   target       将要匹配的子串.
+     * @param   targetOffset 子串开始位置.
+     * @param   targetCount  子串长度.
+     * @param   fromIndex    从指定索引开始查找.
      */
     static int lastIndexOf(char[] source, int sourceOffset, int sourceCount,
             char[] target, int targetOffset, int targetCount,
@@ -2147,10 +2160,11 @@ public final class String implements java.io.Serializable, Comparable<String>, C
         if (fromIndex < 0) {
             return -1;
         }
+        // 调整开始索引
         if (fromIndex > rightIndex) {
             fromIndex = rightIndex;
         }
-        /* Empty string always matches. */
+        /* 若空串，返回长度 */
         if (targetCount == 0) {
             return fromIndex;
         }
@@ -2160,14 +2174,16 @@ public final class String implements java.io.Serializable, Comparable<String>, C
         int min = sourceOffset + targetCount - 1;
         int i = min + fromIndex;
 
-    startSearchForLastChar:
+        startSearchForLastChar:
         while (true) {
+            // 先查找子串最后一个字符
             while (i >= min && source[i] != strLastChar) {
                 i--;
             }
             if (i < min) {
                 return -1;
             }
+            // 查找子串剩余字符
             int j = i - 1;
             int start = j - (targetCount - 1);
             int k = strLastIndex - 1;
