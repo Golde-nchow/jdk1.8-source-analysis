@@ -1666,17 +1666,22 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
-     * Returns a hash code for this string. The hash code for a
-     * {@code String} object is computed as
+     * 返回该对象的哈希值。
+     *
+     * String 对象的哈希值计算方式为:
      * <blockquote><pre>
      * s[0]*31^(n-1) + s[1]*31^(n-2) + ... + s[n-1]
      * </pre></blockquote>
+     *
+     * 使用 int 类型的算法，s[i] 是字符串第 [i] 个字符，n是字符串的长度，
+     * ^ 表示指数。（空字符串的哈希值为 0）
+     *
      * using {@code int} arithmetic, where {@code s[i]} is the
      * <i>i</i>th character of the string, {@code n} is the length of
      * the string, and {@code ^} indicates exponentiation.
      * (The hash value of the empty string is zero.)
      *
-     * @return  a hash code value for this object.
+     * @return  该对象的哈希值.
      */
     public int hashCode() {
         int h = hash;
@@ -1692,6 +1697,13 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 返回字符串中指定字符第一次出现的索引。若一个字符值 ch 出现在该 String 对象
+     * 的字符序列中，那么第一次出现的索引（Unicode编码单位）将会被返回。
+     *
+     * 1、对于字符值 ch 从0到0xFFFF（包括）范围，它是最小值k，因此 this.chat(k) 等于 ch。
+     * 2、对于 ch 的其他值，它是最小值k，因此 this.codePointAt(k) 等于 ch。
+     * 3、其他条件，若没有字符出现在该字符串中，则返回 -1。
+     *
      * Returns the index within this string of the first occurrence of
      * the specified character. If a character with value
      * {@code ch} occurs in the character sequence represented by
@@ -1710,10 +1722,8 @@ public final class String implements java.io.Serializable, Comparable<String>, C
      * is true. In either case, if no such character occurs in this
      * string, then {@code -1} is returned.
      *
-     * @param   ch   a character (Unicode code point).
-     * @return  the index of the first occurrence of the character in the
-     *          character sequence represented by this object, or
-     *          {@code -1} if the character does not occur.
+     * @param   ch   字符 (Unicode 编码单元).
+     * @return  返回该字符第一次出现的位置，若没有该字符，则返回 -1.
      */
     public int indexOf(int ch) {
         return indexOf(ch, 0);
