@@ -1941,38 +1941,44 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 返回字符串第一个出现的子串。
+     * 原理：indexOf(String str, int fromIndex).
+     *
      * Returns the index within this string of the first occurrence of the
      * specified substring.
      *
-     * <p>The returned index is the smallest value <i>k</i> for which:
+     * <p>返回的索引是最小的值 <i>k</i> :
      * <blockquote><pre>
      * this.startsWith(str, <i>k</i>)
      * </pre></blockquote>
-     * If no such value of <i>k</i> exists, then {@code -1} is returned.
+     * 若 <i>k</i> 值不存在, 返回 {@code -1}.
      *
-     * @param   str   the substring to search for.
-     * @return  the index of the first occurrence of the specified substring,
-     *          or {@code -1} if there is no such occurrence.
+     * @param   str   搜索的子串.
+     * @return  第一次出现的子串的索引，若不存在返回 -1.
      */
     public int indexOf(String str) {
         return indexOf(str, 0);
     }
 
     /**
+     * 返回字符串中指定字符第一次出现的索引，并从指定开始索引查找。
+     * 原理：indexOf(
+     *           char[] source, int sourceOffset, int sourceCount,
+     *           String target, int fromIndex
+     *      )
+     *
      * Returns the index within this string of the first occurrence of the
      * specified substring, starting at the specified index.
      *
-     * <p>The returned index is the smallest value <i>k</i> for which:
+     * <p>返回的索引是最小的值 <i>k</i> :
      * <blockquote><pre>
      * <i>k</i> &gt;= fromIndex {@code &&} this.startsWith(str, <i>k</i>)
      * </pre></blockquote>
-     * If no such value of <i>k</i> exists, then {@code -1} is returned.
+     * 若 <i>k</i> 值不存在, 返回 {@code -1}.
      *
-     * @param   str         the substring to search for.
-     * @param   fromIndex   the index from which to start the search.
-     * @return  the index of the first occurrence of the specified substring,
-     *          starting at the specified index,
-     *          or {@code -1} if there is no such occurrence.
+     * @param   str         搜索的子串.
+     * @param   fromIndex   开始搜索的索引位置.
+     * @return  返回子串第一次出现的开始位置，若不存在此子串，则返回 -1.
      */
     public int indexOf(String str, int fromIndex) {
         return indexOf(value, 0, value.length,
@@ -1980,15 +1986,23 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 此方法是字符串和 AbstractStringBuilder 共享的代码，用于执行搜索。
+     * source 数组是被搜索的字符数组，target 字符串是要匹配的子串。
+     *
+     * 原理：
+     * indexOf(char[] source, int sourceOffset, int sourceCount,
+     *         char[] target, int targetOffset, int targetCount,
+     *         int fromIndex)
+     *
      * Code shared by String and AbstractStringBuilder to do searches. The
      * source is the character array being searched, and the target
      * is the string being searched for.
      *
-     * @param   source       the characters being searched.
-     * @param   sourceOffset offset of the source string.
-     * @param   sourceCount  count of the source string.
-     * @param   target       the characters being searched for.
-     * @param   fromIndex    the index to begin searching from.
+     * @param   source       被搜索的字符数组.
+     * @param   sourceOffset 字符数组的开始位置.
+     * @param   sourceCount  字符数组的长度.
+     * @param   target       将要匹配的子串.
+     * @param   fromIndex    开始搜索的索引位置.
      */
     static int indexOf(char[] source, int sourceOffset, int sourceCount,
             String target, int fromIndex) {
@@ -1998,17 +2012,20 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 此方法是字符串和 AbstractStringBuilder 共享的代码，用于执行搜索。
+     * source 数组是被搜索的字符数组，target 字符串是要匹配的子串。
+     *
      * Code shared by String and StringBuffer to do searches. The
      * source is the character array being searched, and the target
      * is the string being searched for.
      *
-     * @param   source       the characters being searched.
-     * @param   sourceOffset offset of the source string.
-     * @param   sourceCount  count of the source string.
-     * @param   target       the characters being searched for.
-     * @param   targetOffset offset of the target string.
-     * @param   targetCount  count of the target string.
-     * @param   fromIndex    the index to begin searching from.
+     * @param   source       搜索的字符数组.
+     * @param   sourceOffset 字符数组的开始位置.
+     * @param   sourceCount  字符数组的长度.
+     * @param   target       将要匹配的子串.
+     * @param   targetOffset 子串的开始位置.
+     * @param   targetCount  子串的长度.
+     * @param   fromIndex    开始搜索的位置.
      */
     static int indexOf(char[] source, int sourceOffset, int sourceCount,
             char[] target, int targetOffset, int targetCount,
