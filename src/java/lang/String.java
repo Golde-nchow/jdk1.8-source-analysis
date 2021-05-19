@@ -2199,6 +2199,14 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 返回该字符串的子串。子串从指定索引的字符开始，直至该字符串末尾。
+     * 例子:
+     * <blockquote><pre>
+     * "unhappy".substring(2) 返回 "happy"
+     * "Harbison".substring(3) 返回 "bison"
+     * "emptiness".substring(9) 返回 "" (空字符串)
+     * </pre></blockquote>
+     *
      * Returns a string that is a substring of this string. The
      * substring begins with the character at the specified index and
      * extends to the end of this string. <p>
@@ -2209,11 +2217,10 @@ public final class String implements java.io.Serializable, Comparable<String>, C
      * "emptiness".substring(9) returns "" (an empty string)
      * </pre></blockquote>
      *
-     * @param      beginIndex   the beginning index, inclusive.
-     * @return     the specified substring.
-     * @exception  IndexOutOfBoundsException  if
-     *             {@code beginIndex} is negative or larger than the
-     *             length of this {@code String} object.
+     * @param      beginIndex   开始索引，包括在内.
+     * @return     指定范围内的子串.
+     * @exception  IndexOutOfBoundsException  若
+     *             {@code beginIndex} 为负数，或者大于 {@code String} 的长度.
      */
     public String substring(int beginIndex) {
         if (beginIndex < 0) {
@@ -2227,6 +2234,15 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
+     * 返回字符串中的子串。从指定索引开始，到 结束索引-1 的范围。
+     * 因此子串的长度为 {@code endIndex-beginIndex}。
+     * <p>
+     * 例子:
+     * <blockquote><pre>
+     * "hamburger".substring(4, 8) 返回 "urge"
+     * "smiles".substring(1, 5) 返回 "mile"
+     * </pre></blockquote>
+     *
      * Returns a string that is a substring of this string. The
      * substring begins at the specified {@code beginIndex} and
      * extends to the character at index {@code endIndex - 1}.
@@ -2238,15 +2254,13 @@ public final class String implements java.io.Serializable, Comparable<String>, C
      * "smiles".substring(1, 5) returns "mile"
      * </pre></blockquote>
      *
-     * @param      beginIndex   the beginning index, inclusive.
-     * @param      endIndex     the ending index, exclusive.
-     * @return     the specified substring.
-     * @exception  IndexOutOfBoundsException  if the
-     *             {@code beginIndex} is negative, or
-     *             {@code endIndex} is larger than the length of
-     *             this {@code String} object, or
-     *             {@code beginIndex} is larger than
-     *             {@code endIndex}.
+     * @param      beginIndex   开始索引，包括在内.
+     * @param      endIndex     结束索引，不包括.
+     * @return     指定范围内的子串.
+     * @exception  IndexOutOfBoundsException 如果
+     *             {@code beginIndex} 是负数, 或者
+     *             {@code endIndex} 大于 {@code String} 的长度,
+     *             或者 {@code beginIndex} 大于 {@code endIndex}.
      */
     public String substring(int beginIndex, int endIndex) {
         if (beginIndex < 0) {
@@ -2264,30 +2278,29 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
-     * Returns a character sequence that is a subsequence of this sequence.
+     * 返回一个该序列的字符子序列。
      *
-     * <p> An invocation of this method of the form
+     * <p> 调用此方法的形式：
      *
      * <blockquote><pre>
      * str.subSequence(begin,&nbsp;end)</pre></blockquote>
      *
-     * behaves in exactly the same way as the invocation
+     * 与下面的方式异曲同工：
      *
      * <blockquote><pre>
      * str.substring(begin,&nbsp;end)</pre></blockquote>
      *
      * @apiNote
-     * This method is defined so that the {@code String} class can implement
-     * the {@link CharSequence} interface.
+     * 该方法的定义，以便 String类 可以实现 CharSequence 接口。
      *
-     * @param   beginIndex   the begin index, inclusive.
-     * @param   endIndex     the end index, exclusive.
-     * @return  the specified subsequence.
+     * @param   beginIndex   开始索引（包含）.
+     * @param   endIndex     结束索引（不包含）.
+     * @return  指定的子序列.
      *
      * @throws  IndexOutOfBoundsException
-     *          if {@code beginIndex} or {@code endIndex} is negative,
-     *          if {@code endIndex} is greater than {@code length()},
-     *          or if {@code beginIndex} is greater than {@code endIndex}
+     *          若 {@code beginIndex} 或 {@code endIndex} 是负数，
+     *          若 {@code endIndex} 大于 {@code length()}，或
+     *             {@code beginIndex} 大于 {@code endIndex}
      *
      * @since 1.4
      * @spec JSR-51
@@ -2297,24 +2310,21 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
-     * Concatenates the specified string to the end of this string.
+     * 连接指定字符串至该字符串的末尾。
+     *
      * <p>
-     * If the length of the argument string is {@code 0}, then this
-     * {@code String} object is returned. Otherwise, a
-     * {@code String} object is returned that represents a character
-     * sequence that is the concatenation of the character sequence
-     * represented by this {@code String} object and the character
-     * sequence represented by the argument string.<p>
-     * Examples:
+     *     若参数上的字符串长度是0，则就会返回 {@code String} 的内容。
+     * 该方法首先将原字符串转换为数组，然后使用 System.arrayCopy 将 str
+     * 复制至原数组的末尾，然后再转换为 String。
+     *
+     * 例子:
      * <blockquote><pre>
-     * "cares".concat("s") returns "caress"
-     * "to".concat("get").concat("her") returns "together"
+     * "cares".concat("s") 返回 "caress"
+     * "to".concat("get").concat("her") 返回 "together"
      * </pre></blockquote>
      *
-     * @param   str   the {@code String} that is concatenated to the end
-     *                of this {@code String}.
-     * @return  a string that represents the concatenation of this object's
-     *          characters followed by the string argument's characters.
+     * @param   str   被拼接至末端的字符串
+     * @return  原字符串+被拼接的字符串
      */
     public String concat(String str) {
         int otherLen = str.length();
