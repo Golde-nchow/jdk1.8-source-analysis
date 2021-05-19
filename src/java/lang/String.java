@@ -2389,12 +2389,11 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
-     * Tells whether or not this string matches the given <a
-     * href="../util/regex/Pattern.html#sum">regular expression</a>.
+     * 告知该字符串是否存在给定 <a href="../util/regex/Pattern.html#sum">
+     *     正则表达式 </a> 匹配的内容.
      *
-     * <p> An invocation of this method of the form
-     * <i>str</i>{@code .matches(}<i>regex</i>{@code )} yields exactly the
-     * same result as the expression
+     * <p> 该方法与下面的操作异曲同工
+     * <i>str</i>{@code .matches(}<i>regex</i>{@code )}
      *
      * <blockquote>
      * {@link java.util.regex.Pattern}.{@link java.util.regex.Pattern#matches(String,CharSequence)
@@ -2402,13 +2401,12 @@ public final class String implements java.io.Serializable, Comparable<String>, C
      * </blockquote>
      *
      * @param   regex
-     *          the regular expression to which this string is to be matched
+     *          将匹配此字符串的正则表达式
      *
-     * @return  {@code true} if, and only if, this string matches the
-     *          given regular expression
+     * @return  若返回 {@code true}, 仅此只有 true，那么该字符串匹配该正则表达式.
      *
      * @throws  PatternSyntaxException
-     *          if the regular expression's syntax is invalid
+     *          若正则表达式不合法.
      *
      * @see java.util.regex.Pattern
      *
