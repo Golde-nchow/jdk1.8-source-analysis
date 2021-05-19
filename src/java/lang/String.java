@@ -2418,11 +2418,10 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
-     * Returns true if and only if this string contains the specified
-     * sequence of char values.
+     * 当且仅当该字符串序列包含该字符串时，才返回 true.
      *
-     * @param s the sequence to search for
-     * @return true if this string contains {@code s}, false otherwise
+     * @param s 查找的字符串
+     * @return 当且仅当查找到的时候，才返回 true.
      * @since 1.5
      */
     public boolean contains(CharSequence s) {
@@ -2430,13 +2429,12 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
-     * Replaces the first substring of this string that matches the given <a
-     * href="../util/regex/Pattern.html#sum">regular expression</a> with the
-     * given replacement.
+     * 使用正则表达式找出指定字符串，然后使用新字符串（不是字符）替换第一次出现的旧字符串。
      *
-     * <p> An invocation of this method of the form
+     * <p>
      * <i>str</i>{@code .replaceFirst(}<i>regex</i>{@code ,} <i>repl</i>{@code )}
-     * yields exactly the same result as the expression
+     *
+     * 该方法与下面的操作异曲同工
      *
      * <blockquote>
      * <code>
@@ -2448,22 +2446,19 @@ public final class String implements java.io.Serializable, Comparable<String>, C
      * </blockquote>
      *
      *<p>
-     * Note that backslashes ({@code \}) and dollar signs ({@code $}) in the
-     * replacement string may cause the results to be different than if it were
-     * being treated as a literal replacement string; see
+     * 请注意，反斜杠 ({@code \}) 和 美元符号({@code $}) 在替换字符串中
+     * 可能导致结果，与被视为文字替换字符串的结果不同。
+     *
      * {@link java.util.regex.Matcher#replaceFirst}.
-     * Use {@link java.util.regex.Matcher#quoteReplacement} to suppress the special
-     * meaning of these characters, if desired.
+     * 若需要，请使用 {@link java.util.regex.Matcher#quoteReplacement} 来抑制这些字符的特殊含义。
      *
-     * @param   regex
-     *          the regular expression to which this string is to be matched
-     * @param   replacement
-     *          the string to be substituted for the first match
+     * @param   regex 查找匹配内容的正则表达式
+     * @param   replacement 新字符串，用于替换第一个匹配到的旧字符串
      *
-     * @return  The resulting {@code String}
+     * @return  {@code String} 结果.
      *
      * @throws  PatternSyntaxException
-     *          if the regular expression's syntax is invalid
+     *          若正则表达式的语法错误
      *
      * @see java.util.regex.Pattern
      *
@@ -2475,13 +2470,12 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
-     * Replaces each substring of this string that matches the given <a
-     * href="../util/regex/Pattern.html#sum">regular expression</a> with the
-     * given replacement.
+     * 使用正则表达式找出指定字符串，然后使用新字符串（不是字符）替换所有出现过的旧字符串。
      *
-     * <p> An invocation of this method of the form
+     * <p>
      * <i>str</i>{@code .replaceAll(}<i>regex</i>{@code ,} <i>repl</i>{@code )}
-     * yields exactly the same result as the expression
+     *
+     * 该方法与下面的操作异曲同工
      *
      * <blockquote>
      * <code>
@@ -2493,22 +2487,20 @@ public final class String implements java.io.Serializable, Comparable<String>, C
      * </blockquote>
      *
      *<p>
-     * Note that backslashes ({@code \}) and dollar signs ({@code $}) in the
-     * replacement string may cause the results to be different than if it were
-     * being treated as a literal replacement string; see
-     * {@link java.util.regex.Matcher#replaceAll Matcher.replaceAll}.
-     * Use {@link java.util.regex.Matcher#quoteReplacement} to suppress the special
-     * meaning of these characters, if desired.
+     * 请注意，反斜杠 ({@code \}) 和 美元符号({@code $}) 在替换字符串中
+     * 可能导致结果，与被视为文字替换字符串的结果不同。
+     * {@link java.util.regex.Matcher#replaceFirst}.
+     * 若需要，请使用 {@link java.util.regex.Matcher#quoteReplacement} 来抑制这些字符的特殊含义。
      *
      * @param   regex
-     *          the regular expression to which this string is to be matched
+     *          查找匹配内容的正则表达式
      * @param   replacement
-     *          the string to be substituted for each match
+     *          新字符串，用于替换第匹配到的所有旧字符串
      *
-     * @return  The resulting {@code String}
+     * @return  {@code String}结果。
      *
      * @throws  PatternSyntaxException
-     *          if the regular expression's syntax is invalid
+     *          若正则表达式的语法错误.
      *
      * @see java.util.regex.Pattern
      *
@@ -2520,15 +2512,14 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
-     * Replaces each substring of this string that matches the literal target
-     * sequence with the specified literal replacement sequence. The
-     * replacement proceeds from the beginning of the string to the end, for
-     * example, replacing "aa" with "b" in the string "aaa" will result in
-     * "ba" rather than "ab".
+     * 使用新的字符串序列，替换旧的字符串序列。
+     * 若有多个相同的，则只替换最开始的子串。
+     * 例如：
+     * "aaa"：使用 "b"，替换掉 "aa"，则返回 "ba"，而不是 "ab".
      *
-     * @param  target The sequence of char values to be replaced
-     * @param  replacement The replacement sequence of char values
-     * @return  The resulting string
+     * @param  target 目标被替换的子串
+     * @param  replacement 用于替换旧子串的新子串
+     * @return  结果字符串
      * @since 1.5
      */
     public String replace(CharSequence target, CharSequence replacement) {
