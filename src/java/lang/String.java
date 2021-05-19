@@ -2338,33 +2338,25 @@ public final class String implements java.io.Serializable, Comparable<String>, C
     }
 
     /**
-     * Returns a string resulting from replacing all occurrences of
-     * {@code oldChar} in this string with {@code newChar}.
+     * 返回被替换指定字符后的字符串结果。
      * <p>
-     * If the character {@code oldChar} does not occur in the
-     * character sequence represented by this {@code String} object,
-     * then a reference to this {@code String} object is returned.
-     * Otherwise, a {@code String} object is returned that
-     * represents a character sequence identical to the character sequence
-     * represented by this {@code String} object, except that every
-     * occurrence of {@code oldChar} is replaced by an occurrence
-     * of {@code newChar}.
+     *     若旧字符没有出现在该字符序列中，则返回该字符串的引用。
+     *
      * <p>
-     * Examples:
+     * 例子:
      * <blockquote><pre>
      * "mesquite in your cellar".replace('e', 'o')
-     *         returns "mosquito in your collar"
+     *         返回 "mosquito in your collar"
      * "the war of baronets".replace('r', 'y')
-     *         returns "the way of bayonets"
+     *         返回 "the way of bayonets"
      * "sparring with a purple porpoise".replace('p', 't')
-     *         returns "starring with a turtle tortoise"
-     * "JonL".replace('q', 'x') returns "JonL" (no change)
+     *         返回 "starring with a turtle tortoise"
+     * "JonL".replace('q', 'x') 返回 "JonL" (no change)
      * </pre></blockquote>
      *
-     * @param   oldChar   the old character.
-     * @param   newChar   the new character.
-     * @return  a string derived from this string by replacing every
-     *          occurrence of {@code oldChar} with {@code newChar}.
+     * @param   oldChar   被替换的旧字符.
+     * @param   newChar   新字符.
+     * @return  通过使用新字符替换旧字符，来派生出新的字符串
      */
     public String replace(char oldChar, char newChar) {
         if (oldChar != newChar) {
@@ -2372,11 +2364,14 @@ public final class String implements java.io.Serializable, Comparable<String>, C
             int i = -1;
             char[] val = value; /* avoid getfield opcode */
 
+            // 获取第一次出现需要替换的元素的位置
             while (++i < len) {
                 if (val[i] == oldChar) {
                     break;
                 }
             }
+            // 若有需要替换的元素，则进行替换
+            // 不过，要先将 i 之前的所有元素复制过去新数组
             if (i < len) {
                 char buf[] = new char[len];
                 for (int j = 0; j < i; j++) {
